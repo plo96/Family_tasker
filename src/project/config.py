@@ -14,12 +14,7 @@ class Settings(BaseSettings):
 
     SQLITE_NAME: str
 
-    ECHO: str
-
-    MAX_TASK_NAME_LENGTH: int = 64
-    MAX_TASK_DESCRIPTION_LENGTH: int = 512
-    MIN_TASK_PRICE: int = 0
-    MAX_TASK_PRICE: int = 10
+    ECHO: bool
 
     @property
     def DATABASE_URL_asyncpg(self):

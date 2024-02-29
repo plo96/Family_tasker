@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional
 from sqlalchemy import String, Uuid, text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
@@ -20,4 +21,8 @@ class TaskOrm(Base):
     name: Mapped[str] = mapped_column(String(settings.MAX_TASK_NAME_LENGTH))
     description: Mapped[Optional[str]] = mapped_column(String(settings.MAX_TASK_DESCRIPTION_LENGTH))
     price: Mapped[int]
+    created_by: Mapped[str]
+    created_at: Mapped[datetime]
+    finished_by: Mapped[str | None]
+    finished_at: Mapped[datetime | None]
 
