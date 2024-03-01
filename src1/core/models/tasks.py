@@ -1,12 +1,8 @@
 from datetime import datetime
 from typing import Optional
-from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column
 
-from ..config import settings
-
 from .base import Base
-
 
 
 class Task(Base):
@@ -17,8 +13,8 @@ class Task(Base):
     #                                  init=False,
     #                                  server_default=text("CREATE EXTENSION IF NOT EXISTS 'uuid-ossp'; uuid_generate_v4();"))
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    name: Mapped[str] = mapped_column(String(settings.MAX_TASK_NAME_LENGTH))
-    description: Mapped[Optional[str]] = mapped_column(String(settings.MAX_TASK_DESCRIPTION_LENGTH))
+    name: Mapped[str]
+    description: Mapped[Optional[str]]
     price: Mapped[int]
     created_by: Mapped[str]
     created_at: Mapped[datetime]
