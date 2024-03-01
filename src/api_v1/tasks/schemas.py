@@ -24,4 +24,5 @@ class TaskUpdate(TaskCreate):
 
 
 class TaskUpdatePartial(TaskCreate):
-    name: str(max_length=MAX_TASK_NAME_LENGTH)
+    # name: str(max_length=MAX_TASK_NAME_LENGTH)
+    pass

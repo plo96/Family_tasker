@@ -22,7 +22,7 @@ class Settings(BaseSettings):
 
     @property
     def DATABASE_URL_async_sqlite(self):
-        return f"sqlite+aiosqlite:///{HOME_DIR}/src/database/DB/{self.SQLITE_NAME}"
+        return f"sqlite+aiosqlite:///{HOME_DIR}/src/DB/{self.SQLITE_NAME}"
 
     @property
     def HOME_DIR(self):

@@ -1,16 +1,15 @@
 from datetime import datetime
 from typing import Optional
-from sqlalchemy import String, Uuid, text
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-from uuid import UUID
+from sqlalchemy import String
+from sqlalchemy.orm import Mapped, mapped_column
 
-from src.project.config import settings
+from ..config import settings
 
-class Base(DeclarativeBase):
-    pass
+from .base import Base
 
 
-class TaskOrm(Base):
+
+class Task(Base):
     __tablename__ = "tasks"
 
     # id: Mapped[UUID] = mapped_column(Uuid,
