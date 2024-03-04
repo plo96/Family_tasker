@@ -4,7 +4,7 @@ from src.repositories.tasks import TaskRepository
 
 
 class UnitOfWorkBase(ABC):
-    tasks: TaskRepository
+    tasks: TaskRepository | None
 
     @abstractmethod
     def __init__(self):

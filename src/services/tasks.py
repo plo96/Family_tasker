@@ -1,19 +1,21 @@
-from ..utils import UnitOfWorkBase
-from ..utils.sqlalchemy_unitofwork import UnitOfWorkSQLAlchemy as UnitOfWork
+from fastapi import Depends
 
-from ..core.schemas import TaskCreate
+from ..utils import UnitOfWorkBase
+
+from ..core.schemas import TaskCreate, TaskDTO
+from ..core.dependencies import get_actual_uow
 
 
 class TaskService:
 	uow: UnitOfWorkBase
-	def __init__(self, uow: UnitOfWorkBase):
-		self.uow: UnitOfWorkBase = uow
 	
-	async def add_task(self, task: TaskCreate):
-		# self.uow = UnitOfWork
-		task_dict = task.model_dump()
-		task = await self.uow.tasks.add_one(task_dict)
-		return task
+	async def add_task(self,
+					   task: TaskCreate,
+					   uow: UnitOfWorkBase = Depends(get_actual_uow(is_tasks=True))) -> TaskDTO:
+		async with uow:
+			task_dict = task.model_dump()
+			res = await self.uow.tasks.add_one(task_dict)
+			task = TaskDTO.model_validate(res, from_attributes=True)
+			await uow.commit()
 		
-	
-# task_service = TaskService(UnitOfWork)
+		return task
