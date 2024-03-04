@@ -9,7 +9,12 @@ MIN_TASK_PRICE: int = 0
 MAX_TASK_PRICE: int = 10
 
 
-class TaskCreate(BaseModel):
+class TaskBase(BaseModel):
+    ...
+
+
+
+class TaskCreate(TaskBase):
     name: str = Field(max_length=MAX_TASK_NAME_LENGTH)
     description: str = Field(max_length=MAX_TASK_DESCRIPTION_LENGTH)
     price: int = Field(ge=MIN_TASK_PRICE, le=MAX_TASK_PRICE)
@@ -28,5 +33,12 @@ class TaskUpdate(TaskCreate):
 
 
 class TaskUpdatePartial(TaskCreate):
-    # name: str(max_length=MAX_TASK_NAME_LENGTH)
-    pass
+    ...
+    # name: Optional[str] = Field(max_length=MAX_TASK_NAME_LENGTH)
+    # description: Optional[str] = Field(max_length=MAX_TASK_DESCRIPTION_LENGTH)
+    # price: Optional[int] = Field(ge=MIN_TASK_PRICE, le=MAX_TASK_PRICE)
+
+
+
+# task_update_patrial = TaskUpdatePartial(name="name", description="description")
+

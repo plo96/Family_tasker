@@ -18,6 +18,6 @@ class Task(Base):
     price: Mapped[int]
     created_by: Mapped[str]
     created_at: Mapped[datetime]
-    finished_by: Mapped[str | None]
-    finished_at: Mapped[datetime | None]
+    finished_by: Mapped[Optional[str]]
+    finished_at: Mapped[Optional[datetime]]
 

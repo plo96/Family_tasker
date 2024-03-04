@@ -1,7 +1,7 @@
 __all__ = (
 	"TaskCreate",
 	"TaskDTO",
-	"TaskDTO",
+	"TaskUpdate",
 	"TaskUpdatePartial",
 )
 
