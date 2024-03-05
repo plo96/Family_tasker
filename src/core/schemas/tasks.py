@@ -32,8 +32,8 @@ class TaskDTO(TaskCreate):
     """ДТО-класс для преобразования ответа алхимии к pydantic"""
     model_config = ConfigDict(from_attributes=True)
     id: int
-    created_by: str
-    created_at: datetime
+    created_by: Optional[str]
+    created_at: Optional[datetime]
     finished_by: Optional[str]
     finished_at: Optional[datetime]
 

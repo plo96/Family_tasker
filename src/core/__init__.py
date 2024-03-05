@@ -6,6 +6,6 @@ __all__ = (
 )
 
 from .config import settings
-import models
-import schemas
-import dependencies
+from . import models
+from . import schemas
+from . import dependencies

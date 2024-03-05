@@ -22,7 +22,7 @@ class UnitOfWorkSQLAlchemy(UnitOfWorkBase):
     async def __aexit__(self, *args):
         await self.rollback()
         # await self._session.remove()
-        await self._session_factory.remove()
+        await self._session.remove()
 
     async def commit(self):
         await self._session.commit()

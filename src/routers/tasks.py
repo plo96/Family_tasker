@@ -1,16 +1,15 @@
 from fastapi import APIRouter, Depends
 
-from ..core.schemas import TaskDTO, TaskCreate
-from ..services import TaskService
-from ..core.dependencies import get_task_service
+from src.core.schemas import TaskDTO, TaskCreate
+from src.services import TaskService
 
 
 router = APIRouter(prefix="/tasks")
 
 
 @router.post("/")
-async def add_task(new_task: TaskCreate,
-                   task_service: TaskService = Depends(get_task_service)) -> TaskDTO:
+async def add_task(new_task: TaskCreate):
+    task_service = TaskService()
     return await task_service.add_task(new_task)
 
 

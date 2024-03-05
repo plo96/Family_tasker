@@ -25,6 +25,10 @@ class Settings(BaseSettings):
         return f"sqlite+aiosqlite:///{HOME_DIR}/src/DB/{self.SQLITE_NAME}"
 
     @property
+    def DATABASE_URL_sqlite(self):
+        return f"sqlite:///{HOME_DIR}/src/DB/{self.SQLITE_NAME}"
+
+    @property
     def HOME_DIR(self):
         return str(HOME_DIR)
 
