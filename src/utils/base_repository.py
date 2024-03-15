@@ -10,4 +10,9 @@ class BaseRepository(ABC):
     @abstractmethod
     async def get_all(self):
         raise NotImplementedError
+    
+    
+    @abstractmethod
+    async def get_by_params(self, **kwargs):
+        raise NotImplementedError
 

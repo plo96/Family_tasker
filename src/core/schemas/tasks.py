@@ -9,7 +9,7 @@ MAX_TASK_PRICE: int = 10
 
 
 class TaskBase(BaseModel):
-    ...
+    pass
 
 
 class TaskCreate(TaskBase):

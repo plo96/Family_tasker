@@ -1,6 +1,5 @@
 
-from src.utils import UnitOfWorkSQLAlchemy as UoW
-
+from src.utils.sqlalchemy_unitofwork import UnitOfWorkSQLAlchemy as UoW
 
 
 def get_actual_uow(**kwargs):
