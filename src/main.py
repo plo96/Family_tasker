@@ -1,13 +1,19 @@
+"""
+    Создание основного приложения FastAPI,
+    подключение всех роутеров,
+    запуск предварительных и завершающих команд
+"""
+
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 import uvicorn
 
-from routers import router
+from src.routers import router
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app: FastAPI):    # noqa
     print('Server starts')
     yield
     print('Server stops')
@@ -18,8 +24,10 @@ app = FastAPI(
              )
 app.include_router(router)
 
+
 @app.get('/')
 def say_hello():
+    """Тестовое сообщение для проверки работоспособности приложения"""
     return 'Hello!'
 
 

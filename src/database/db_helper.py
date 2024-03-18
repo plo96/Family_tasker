@@ -1,3 +1,7 @@
+"""
+    Вспомогательный класс DatabaseHelper для установления соединения с базой данных
+    и выдачи сессии (на основе SQLAlchemy)
+"""
 from sqlalchemy.ext.asyncio import async_scoped_session, create_async_engine, async_sessionmaker
 from asyncio import current_task
 
@@ -31,5 +35,5 @@ class DatabaseHelper:
 
 
 db_helper = DatabaseHelper(url=settings.DATABASE_URL_async_sqlite,
-                           echo=settings.ECHO)
+                           echo=settings.ECHO)  # type: ignore
 

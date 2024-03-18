@@ -1,23 +1,23 @@
 """
-    Настройки для приложения
+    Настройки для прогона тестов
 """
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pathlib import Path
 
-HOME_DIR = Path(__file__).parent.parent.parent
+HOME_DIR = Path(__file__).parent.parent
 
 
-class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=f"{HOME_DIR}/.env")
-    DB_HOST: str
-    DB_PORT: int
-    DB_USER: str
-    DB_PASS: str
-    DB_NAME: str
+class TestSettings(BaseSettings):
+    model_config = SettingsConfigDict(env_file=f"{HOME_DIR}/tests/.env")
+    TEST_DB_HOST: str
+    TEST_DB_PORT: int
+    TEST_DB_USER: str
+    TEST_DB_PASS: str
+    TEST_DB_NAME: str
 
-    SQLITE_NAME: str
+    TEST_SQLITE_NAME: str
 
-    ECHO: bool
+    TEST_ECHO: bool
 
     @property
     def DATABASE_URL_asyncpg(self):
@@ -36,6 +36,6 @@ class Settings(BaseSettings):
         return str(HOME_DIR)
 
 
-settings = Settings()           # type: ignore
+test_settings = TestSettings()           # type: ignore
 
 

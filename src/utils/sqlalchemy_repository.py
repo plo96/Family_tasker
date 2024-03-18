@@ -1,12 +1,17 @@
+"""
+    Реализация конкретного репозитория на базе SQLAlchemy
+"""
+from typing import Any
+
 from sqlalchemy.ext.asyncio import AsyncSession, async_scoped_session
-from sqlalchemy import insert, select, delete
+from sqlalchemy import select
 
 from .base_repository import BaseRepository
 
 
 class SQLAlchemyRepository(BaseRepository):
     """SQLAlchemy-класс для работы с рапозиторием для конкретной модели ORM"""
-    model = None
+    model: Any = None
 
     def __init__(self, session: AsyncSession | async_scoped_session):
         self.session = session
@@ -28,13 +33,13 @@ class SQLAlchemyRepository(BaseRepository):
         res = await self.session.execute(stmt)
         return list(res.scalars().all())
 
-    async def delete_by_params(self, **kwargs) -> list[model]:
-        
-        stmt = delete(self.model).filter_by(**kwargs)
-        await self.session.execute(stmt)
+    async def delete_one(self, entity: model) -> None:
+        await self.session.delete(entity)
+        await self.session.flush()
 
-        query = select(self.model).filter_by(**kwargs)
-        res = await self.session.execute(query)
-        res = res.scalars().all()
-        
-        return list(res)
+    async def update_one(self, entity: model, data: dict) -> model:
+        for name, value in data.items():
+            setattr(entity, name, value)
+        await self.session.flush()
+        await self.session.refresh(entity)
+        return entity

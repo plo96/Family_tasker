@@ -1,28 +1,33 @@
+"""
+    Интерфейс для работы с UnitOfWork
+"""
 from abc import ABC, abstractmethod
 
 from src.repositories.tasks import TaskRepository
 
 
 class UnitOfWorkBase(ABC):
-    tasks: TaskRepository | None
+    """Базовый абстрактный класс для создания интерфейса UoW"""
+    tasks: TaskRepository
 
     @abstractmethod
     def __init__(self, **kwargs):
-        raise NotImplementedError
+        ...
 
     @abstractmethod
     async def __aenter__(self):
-        raise NotImplementedError
+        ...
 
     @abstractmethod
     async def __aexit__(self, *args):
-        raise NotImplementedError
+        ...
 
     @abstractmethod
     async def commit(self):
-        raise NotImplementedError
+        """Сохранение изменений в БД"""
+        ...
 
     @abstractmethod
     async def rollback(self):
-        raise NotImplementedError
-
+        """Откат изменений в БД"""
+        ...

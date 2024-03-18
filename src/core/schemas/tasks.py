@@ -1,5 +1,9 @@
+"""
+    Создание различных вариаций класса Task на базе Pydantic для последующей валидации данных
+"""
 from datetime import datetime
 from typing import Optional
+
 from pydantic import BaseModel, Field, ConfigDict
 
 MAX_TASK_NAME_LENGTH: int = 64
@@ -22,7 +26,7 @@ class TaskUpdate(TaskCreate):
     pass
 
 
-class TaskUpdatePartial(TaskCreate):
+class TaskUpdatePartial(TaskBase):
     name: str = Field(max_length=MAX_TASK_NAME_LENGTH, default=None)
     description: str = Field(max_length=MAX_TASK_DESCRIPTION_LENGTH, default=None)
     price: int = Field(ge=MIN_TASK_PRICE, le=MAX_TASK_PRICE, default=None)
