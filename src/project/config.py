@@ -14,10 +14,13 @@ class Settings(BaseSettings):
     DB_USER: str
     DB_PASS: str
     DB_NAME: str
+    TEST_DB_NAME: str
 
     SQLITE_NAME: str
+    TEST_SQLITE_NAME: str
 
     ECHO: bool
+    TEST_ECHO: bool
 
     @property
     def DATABASE_URL_asyncpg(self):
@@ -26,10 +29,14 @@ class Settings(BaseSettings):
     @property
     def DATABASE_URL_async_sqlite(self):
         return f"sqlite+aiosqlite:///{HOME_DIR}/src/database/{self.SQLITE_NAME}"
-
+   
     @property
-    def DATABASE_URL_sqlite(self):
-        return f"sqlite:///{HOME_DIR}/src/database/{self.SQLITE_NAME}"
+    def TEST_DATABASE_URL_async_sqlite(self):
+        return f"sqlite+aiosqlite:///{HOME_DIR}/src/database/{self.TEST_SQLITE_NAME}"
+    
+    # @property
+    # def DATABASE_URL_sqlite(self):
+    #     return f"sqlite:///{HOME_DIR}/src/database/{self.SQLITE_NAME}"
 
     @property
     def HOME_DIR(self):

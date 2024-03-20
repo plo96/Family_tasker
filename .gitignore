@@ -4,3 +4,6 @@ venv/
 __pycache__/
 src/.env
 src/__pycache__/
+requirements.txt
+tests/tasks/.pytest_cache/
+tests/.pytest_cache/
