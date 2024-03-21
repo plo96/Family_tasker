@@ -1,12 +1,14 @@
 """
     Роутер для взаимодействия с Task
 """
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Depends
 from fastapi.responses import JSONResponse
 
 from src.project.exceptions import ObjectNotFoundError
 from src.core.schemas import TaskDTO, TaskCreate, TaskUpdate, TaskUpdatePartial
+from src.core.dependencies import get_actual_uow
 from src.services import TaskService
+from src.utils import UnitOfWorkBase
 
 
 router = APIRouter(prefix="/tasks",
@@ -14,14 +16,14 @@ router = APIRouter(prefix="/tasks",
 
 
 @router.get("/", response_model=list[TaskDTO])
-async def get_tasks():
-    return await TaskService.get_tasks()
+async def get_tasks(uow: UnitOfWorkBase = Depends(get_actual_uow)):
+    return await TaskService.get_tasks(uow=uow)
 
 
 @router.get("/{task_id}", response_model=TaskDTO)
-async def get_task_from_id(task_id: int):
+async def get_task_from_id(task_id: int, uow: UnitOfWorkBase = Depends(get_actual_uow)):
     try:
-        return await TaskService.get_task_by_id(task_id)
+        return await TaskService.get_task_by_id(task_id, uow=uow)
     except ObjectNotFoundError:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Object with this id is not found in database")
@@ -32,14 +34,14 @@ async def get_task_from_id(task_id: int):
 
 
 @router.post("/", response_model=TaskDTO)
-async def add_task(new_task: TaskCreate):
-    return await TaskService.add_task(new_task)
+async def add_task(new_task: TaskCreate, uow: UnitOfWorkBase = Depends(get_actual_uow)):
+    return await TaskService.add_task(new_task, uow=uow)
 
 
 @router.delete("/{task_id}")
-async def delete_task_from_id(task_id: int) -> JSONResponse:
+async def delete_task_from_id(task_id: int, uow: UnitOfWorkBase = Depends(get_actual_uow)) -> JSONResponse:
     try:
-        await TaskService.delete_task_by_id(task_id)
+        await TaskService.delete_task_by_id(task_id, uow=uow)
         return JSONResponse(status_code=status.HTTP_200_OK,
                             content={'detail': f'Task with id={task_id} is successfully deleted'})
     except ObjectNotFoundError:
@@ -52,9 +54,9 @@ async def delete_task_from_id(task_id: int) -> JSONResponse:
 
 
 @router.put("/{task_id}", response_model=TaskDTO)
-async def put_task_from_id(task_id: int, task: TaskUpdate):
+async def put_task_from_id(task_id: int, task: TaskUpdate, uow: UnitOfWorkBase = Depends(get_actual_uow)):
     try:
-        return await TaskService.update_task_by_id(task_id, task)
+        return await TaskService.update_task_by_id(task_id, task, uow=uow)
     except ObjectNotFoundError:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Object with this id is not found in database")
@@ -65,9 +67,9 @@ async def put_task_from_id(task_id: int, task: TaskUpdate):
 
 
 @router.patch("/{task_id}", response_model=TaskDTO)
-async def patch_task_from_id(task_id: int, task: TaskUpdatePartial):
+async def patch_task_from_id(task_id: int, task: TaskUpdatePartial, uow: UnitOfWorkBase = Depends(get_actual_uow)):
     try:
-        return await TaskService.update_task_by_id(task_id, task)
+        return await TaskService.update_task_by_id(task_id, task, uow=uow)
     except ObjectNotFoundError:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Object with this id is not found in database")
@@ -75,5 +77,3 @@ async def patch_task_from_id(task_id: int, task: TaskUpdatePartial):
         print(_ex)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail="Unknown internal server error")
-
-

@@ -22,8 +22,9 @@ class Task(Base):
     name: Mapped[str]
     description: Mapped[Optional[str]]
     price: Mapped[int]
-    created_by: Mapped[str]
-    created_at: Mapped[datetime] = mapped_column(default=datetime.now(UTC))
+    created_by: Mapped[Optional[str]]
+    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
+    # created_at: Mapped[datetime] = mapped_column(default=func(''))
     finished_by: Mapped[Optional[str]]
     finished_at: Mapped[Optional[datetime]]
 

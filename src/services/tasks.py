@@ -1,18 +1,19 @@
 """
     Сервис для осуществления бизнес-логики работы с Task
 """
+from asyncio import sleep
+
 from src.utils import UnitOfWorkBase
 from src.project.exceptions import ObjectNotFoundError
 from src.core.schemas import TaskCreate, TaskDTO, TaskUpdate, TaskUpdatePartial
-from src.core.dependencies import get_actual_uow
 
 
 class TaskService:
     uow: UnitOfWorkBase
-
+    
     @staticmethod
     async def add_task(task: TaskCreate,
-                       uow: UnitOfWorkBase = get_actual_uow(is_tasks=True)) -> TaskDTO:
+                       uow: UnitOfWorkBase) -> TaskDTO:
         async with uow:
             task_dict = task.model_dump()
             res = await uow.tasks.add_one(data=task_dict)
@@ -22,7 +23,7 @@ class TaskService:
         return task
 
     @staticmethod
-    async def get_tasks(uow: UnitOfWorkBase = get_actual_uow(is_tasks=True)) -> list[TaskDTO]:
+    async def get_tasks(uow: UnitOfWorkBase) -> list[TaskDTO]:
         async with uow:
             res = await uow.tasks.get_all()
             all_tasks = [TaskDTO.model_validate(task) for task in res]
@@ -31,7 +32,7 @@ class TaskService:
 
     @staticmethod
     async def get_task_by_id(task_id: int,
-                             uow: UnitOfWorkBase = get_actual_uow(is_tasks=True)) -> TaskDTO:
+                             uow: UnitOfWorkBase) -> TaskDTO:
         async with uow:
             res = await uow.tasks.get_by_params(id=task_id)
             if not res:
@@ -43,7 +44,7 @@ class TaskService:
 
     @staticmethod
     async def delete_task_by_id(task_id: int,
-                                uow: UnitOfWorkBase = get_actual_uow(is_tasks=True)) -> None:
+                                uow: UnitOfWorkBase) -> None:
         async with uow:
             res = await uow.tasks.get_by_params(id=task_id)
             if not res:
@@ -55,7 +56,7 @@ class TaskService:
     @staticmethod
     async def update_task_by_id(task_id: int,
                                 updated_task: TaskUpdate | TaskUpdatePartial,
-                                uow: UnitOfWorkBase = get_actual_uow(is_tasks=True)) -> TaskDTO:
+                                uow: UnitOfWorkBase) -> TaskDTO:
         async with uow:
             res = await uow.tasks.get_by_params(id=task_id)
             if not res:
@@ -67,4 +68,3 @@ class TaskService:
             await uow.commit()
 
         return task
-
