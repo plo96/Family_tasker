@@ -1,8 +1,6 @@
 """
     Сервис для осуществления бизнес-логики работы с Task
 """
-from asyncio import sleep
-
 from src.utils import UnitOfWorkBase
 from src.project.exceptions import ObjectNotFoundError
 from src.core.schemas import TaskCreate, TaskDTO, TaskUpdate, TaskUpdatePartial
