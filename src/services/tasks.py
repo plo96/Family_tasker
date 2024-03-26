@@ -12,6 +12,7 @@ class TaskService:
     @staticmethod
     async def add_task(task: TaskCreate,
                        uow: UnitOfWorkBase) -> TaskDTO:
+        """Добавление задачи в БД и сопутствующие действия"""
         async with uow:
             task_dict = task.model_dump()
             res = await uow.tasks.add_one(data=task_dict)
@@ -22,6 +23,7 @@ class TaskService:
 
     @staticmethod
     async def get_tasks(uow: UnitOfWorkBase) -> list[TaskDTO]:
+        """Запрос всех задач из БД и сопутствующие действия"""
         async with uow:
             res = await uow.tasks.get_all()
             all_tasks = [TaskDTO.model_validate(task) for task in res]
@@ -31,6 +33,7 @@ class TaskService:
     @staticmethod
     async def get_task_by_id(task_id: int,
                              uow: UnitOfWorkBase) -> TaskDTO:
+        """Запрос одной задачи по id из БД и сопутствующие действия"""
         async with uow:
             res = await uow.tasks.get_by_params(id=task_id)
             if not res:
@@ -43,6 +46,7 @@ class TaskService:
     @staticmethod
     async def delete_task_by_id(task_id: int,
                                 uow: UnitOfWorkBase) -> None:
+        """Удаление одной задачи по id из БД и сопутствующие действия"""
         async with uow:
             res = await uow.tasks.get_by_params(id=task_id)
             if not res:
@@ -55,6 +59,7 @@ class TaskService:
     async def update_task_by_id(task_id: int,
                                 updated_task: TaskUpdate | TaskUpdatePartial,
                                 uow: UnitOfWorkBase) -> TaskDTO:
+        """Частичное или полное изменение одной задачи по id из БД и сопутствующие действия"""
         async with uow:
             res = await uow.tasks.get_by_params(id=task_id)
             if not res:

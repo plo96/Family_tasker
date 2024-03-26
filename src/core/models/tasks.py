@@ -1,16 +1,16 @@
 """
     ОРМ-модель Task для задач
 """
-from datetime import datetime
 from typing import Optional
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.sql import func
-from datetime import datetime, UTC
+from datetime import datetime
 
 from .base import Base
 
 
 class Task(Base):
+    """ОРМ-класс с декларативным объявлением с помощью SQLAlchemy для задач"""
     __tablename__ = "tasks"
 
     # id: Mapped[UUID] = mapped_column(Uuid,

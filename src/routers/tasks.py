@@ -16,12 +16,15 @@ router = APIRouter(prefix="/tasks",
 
 
 @router.get("/", response_model=list[TaskDTO])
-async def get_tasks(uow: UnitOfWorkBase = Depends(get_actual_uow)):
+async def get_tasks(uow: UnitOfWorkBase = Depends(get_actual_uow)) -> list[TaskDTO]:
+    """Эндпоинт для запроса списка всех задач"""
     return await TaskService.get_tasks(uow=uow)
 
 
 @router.get("/{task_id}", response_model=TaskDTO)
-async def get_task_from_id(task_id: int, uow: UnitOfWorkBase = Depends(get_actual_uow)):
+async def get_task_by_id(task_id: int,
+                         uow: UnitOfWorkBase = Depends(get_actual_uow)) -> TaskDTO:
+    """Эндпоинт для запроса одной задачи по id"""
     try:
         return await TaskService.get_task_by_id(task_id, uow=uow)
     except ObjectNotFoundError:
@@ -34,12 +37,16 @@ async def get_task_from_id(task_id: int, uow: UnitOfWorkBase = Depends(get_actua
 
 
 @router.post("/", response_model=TaskDTO)
-async def add_task(new_task: TaskCreate, uow: UnitOfWorkBase = Depends(get_actual_uow)):
+async def add_task(new_task: TaskCreate,
+                   uow: UnitOfWorkBase = Depends(get_actual_uow)) -> TaskDTO:
+    """Эндпоинт для добавления одной задачи"""
     return await TaskService.add_task(new_task, uow=uow)
 
 
 @router.delete("/{task_id}")
-async def delete_task_from_id(task_id: int, uow: UnitOfWorkBase = Depends(get_actual_uow)) -> JSONResponse:
+async def delete_task_by_id(task_id: int,
+                            uow: UnitOfWorkBase = Depends(get_actual_uow)) -> JSONResponse:
+    """Эндпоинт для удаления одной задачи по id"""
     try:
         await TaskService.delete_task_by_id(task_id, uow=uow)
         return JSONResponse(status_code=status.HTTP_200_OK,
@@ -54,7 +61,9 @@ async def delete_task_from_id(task_id: int, uow: UnitOfWorkBase = Depends(get_ac
 
 
 @router.put("/{task_id}", response_model=TaskDTO)
-async def put_task_from_id(task_id: int, task: TaskUpdate, uow: UnitOfWorkBase = Depends(get_actual_uow)):
+async def put_task_by_id(task_id: int, task: TaskUpdate,
+                         uow: UnitOfWorkBase = Depends(get_actual_uow)) -> TaskDTO:
+    """Эндпоинт для полного изменения одной задачи по id"""
     try:
         return await TaskService.update_task_by_id(task_id, task, uow=uow)
     except ObjectNotFoundError:
@@ -67,7 +76,9 @@ async def put_task_from_id(task_id: int, task: TaskUpdate, uow: UnitOfWorkBase =
 
 
 @router.patch("/{task_id}", response_model=TaskDTO)
-async def patch_task_from_id(task_id: int, task: TaskUpdatePartial, uow: UnitOfWorkBase = Depends(get_actual_uow)):
+async def patch_task_by_id(task_id: int, task: TaskUpdatePartial,
+                           uow: UnitOfWorkBase = Depends(get_actual_uow)) -> TaskDTO:
+    """Эндпоинт для частичного изменения одной задачи по id"""
     try:
         return await TaskService.update_task_by_id(task_id, task, uow=uow)
     except ObjectNotFoundError:

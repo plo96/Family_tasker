@@ -6,4 +6,5 @@ from src.core.models.tasks import Task
 
 
 class TaskRepository(SQLAlchemyRepository):
+    """Реализация репозитория для модели задач (Task)"""
     model = Task

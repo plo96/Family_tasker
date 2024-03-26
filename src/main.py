@@ -14,6 +14,7 @@ from src.routers import router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):    # noqa
+    """'Обертка' для реализации событий до и после запуска приложения"""
     print('Server starts')
     yield
     print('Server stops')

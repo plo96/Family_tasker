@@ -1,5 +1,8 @@
+"""
+    Модуль с реализацией конкретных роутеров для различных сущностей
+"""
 __all__ = (
-	"router",
+    "router",
 )
 
 from fastapi import APIRouter

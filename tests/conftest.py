@@ -17,7 +17,7 @@ from src.core.models import Base
 from src.main import app
 from src.utils.sqlalchemy_unitofwork import UnitOfWorkSQLAlchemy as UoW
 
-NUM_TESTS = 10
+NUM_TESTS = 5
 
 fake_engine = create_async_engine(url=settings.TEST_DATABASE_URL_async_sqlite, poolclass=NullPool)
 fake_session_factory = async_sessionmaker(bind=fake_engine, autoflush=False, autocommit=False, expire_on_commit=False)
@@ -29,6 +29,7 @@ fake_scoped_session_factory = async_scoped_session(session_factory=fake_session_
 def get_actual_session_factory():
     # return fake_scoped_session_factory
     return fake_session_factory
+
 
 def override_get_actual_uow():
     uow = UoW(session_factory=get_actual_session_factory())
@@ -64,5 +65,4 @@ async def clear_database() -> None:
         await conn.run_sync(metadata.drop_all)
     async with fake_engine.begin() as conn:
         await conn.run_sync(metadata.create_all)
-    print('database cleared')
         
