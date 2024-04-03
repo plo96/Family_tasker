@@ -14,5 +14,3 @@ def get_actual_session_factory() -> async_sessionmaker:
 def get_actual_uow(session_factory: async_sessionmaker = Depends(get_actual_session_factory)) -> UnitOfWorkBase:
     """Возвращает актуальный экземпляр UnitOfWork с передачей ему метода получения сессий с БД"""
     return UnitOfWorkSQLAlchemy(session_factory=session_factory)
-
-

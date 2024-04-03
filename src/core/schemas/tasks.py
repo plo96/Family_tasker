@@ -3,6 +3,7 @@
 """
 from datetime import datetime
 from typing import Optional
+from uuid import UUID
 
 from pydantic import BaseModel, Field, ConfigDict
 
@@ -39,7 +40,7 @@ class TaskUpdatePartial(TaskBase):
 class TaskDTO(TaskCreate):
     """ДТО-класс для преобразования ответа алхимии к pydantic и дальнейшей работы с ней"""
     model_config = ConfigDict(from_attributes=True)
-    id: int
+    id: UUID
     created_by: Optional[str]
     created_at: Optional[datetime]
     finished_by: Optional[str]

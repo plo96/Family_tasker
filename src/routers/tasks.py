@@ -1,6 +1,8 @@
 """
     Роутер для взаимодействия с Task
 """
+from uuid import UUID
+
 from fastapi import APIRouter, HTTPException, status, Depends
 from fastapi.responses import JSONResponse
 
@@ -22,7 +24,7 @@ async def get_tasks(uow: UnitOfWorkBase = Depends(get_actual_uow)) -> list[TaskD
 
 
 @router.get("/{task_id}", response_model=TaskDTO)
-async def get_task_by_id(task_id: int,
+async def get_task_by_id(task_id: UUID,
                          uow: UnitOfWorkBase = Depends(get_actual_uow)) -> TaskDTO:
     """Эндпоинт для запроса одной задачи по id"""
     try:
@@ -44,7 +46,7 @@ async def add_task(new_task: TaskCreate,
 
 
 @router.delete("/{task_id}")
-async def delete_task_by_id(task_id: int,
+async def delete_task_by_id(task_id: UUID,
                             uow: UnitOfWorkBase = Depends(get_actual_uow)) -> JSONResponse:
     """Эндпоинт для удаления одной задачи по id"""
     try:
@@ -61,7 +63,7 @@ async def delete_task_by_id(task_id: int,
 
 
 @router.put("/{task_id}", response_model=TaskDTO)
-async def put_task_by_id(task_id: int, task: TaskUpdate,
+async def put_task_by_id(task_id: UUID, task: TaskUpdate,
                          uow: UnitOfWorkBase = Depends(get_actual_uow)) -> TaskDTO:
     """Эндпоинт для полного изменения одной задачи по id"""
     try:
@@ -76,7 +78,7 @@ async def put_task_by_id(task_id: int, task: TaskUpdate,
 
 
 @router.patch("/{task_id}", response_model=TaskDTO)
-async def patch_task_by_id(task_id: int, task: TaskUpdatePartial,
+async def patch_task_by_id(task_id: UUID, task: TaskUpdatePartial,
                            uow: UnitOfWorkBase = Depends(get_actual_uow)) -> TaskDTO:
     """Эндпоинт для частичного изменения одной задачи по id"""
     try:

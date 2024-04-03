@@ -1,4 +1,6 @@
 from random import choice
+from uuid import uuid4
+
 import pytest
 from fastapi import status
 from httpx import AsyncClient
@@ -28,7 +30,7 @@ async def test_put_task_by_id(task_url: str, async_client: AsyncClient,
 @pytest.mark.usefixtures("clear_database")
 async def test_put_task_by_bad_id(task_url: str, async_client: AsyncClient,
                                   one_new_task: TaskCreate):
-    result = await async_client.put(url=task_url + '1', json=one_new_task.model_dump())
+    result = await async_client.put(url=task_url + str(uuid4()), json=one_new_task.model_dump())
     assert result.status_code == status.HTTP_404_NOT_FOUND
 
 

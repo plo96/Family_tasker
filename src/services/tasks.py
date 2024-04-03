@@ -1,6 +1,8 @@
 """
     Сервис для осуществления бизнес-логики работы с Task
 """
+from uuid import UUID
+
 from src.utils import UnitOfWorkBase
 from src.project.exceptions import ObjectNotFoundError
 from src.core.schemas import TaskCreate, TaskDTO, TaskUpdate, TaskUpdatePartial
@@ -31,7 +33,7 @@ class TaskService:
         return all_tasks
 
     @staticmethod
-    async def get_task_by_id(task_id: int,
+    async def get_task_by_id(task_id: UUID,
                              uow: UnitOfWorkBase) -> TaskDTO:
         """Запрос одной задачи по id из БД и сопутствующие действия"""
         async with uow:
@@ -44,7 +46,7 @@ class TaskService:
         return task
 
     @staticmethod
-    async def delete_task_by_id(task_id: int,
+    async def delete_task_by_id(task_id: UUID,
                                 uow: UnitOfWorkBase) -> None:
         """Удаление одной задачи по id из БД и сопутствующие действия"""
         async with uow:
@@ -56,7 +58,7 @@ class TaskService:
             await uow.commit()
 
     @staticmethod
-    async def update_task_by_id(task_id: int,
+    async def update_task_by_id(task_id: UUID,
                                 updated_task: TaskUpdate | TaskUpdatePartial,
                                 uow: UnitOfWorkBase) -> TaskDTO:
         """Частичное или полное изменение одной задачи по id из БД и сопутствующие действия"""

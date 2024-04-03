@@ -1,4 +1,6 @@
 from random import choice, randint
+from uuid import uuid4
+
 import pytest
 from fastapi import status
 from httpx import AsyncClient
@@ -54,7 +56,7 @@ async def test_patch_task_by_bad_id(task_url: str, async_client: AsyncClient,
                                     one_new_task: TaskCreate):
     new_task_dict = one_new_task.model_dump()
     new_task_dict, list_of_unused_keys = get_partial_dict(new_task_dict)
-    result = await async_client.patch(url=task_url + '1', json=new_task_dict)
+    result = await async_client.patch(url=task_url + str(uuid4()), json=new_task_dict)
     assert result.status_code == status.HTTP_404_NOT_FOUND
     session_factory = get_fake_session_factory()
     async with session_factory() as session:

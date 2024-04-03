@@ -2,8 +2,7 @@
     Вспомогательный класс DatabaseHelper для установления соединения с базой данных
     и выдачи сессии (на основе SQLAlchemy)
 """
-from asyncio import current_task
-from sqlalchemy.ext.asyncio import async_scoped_session, create_async_engine, async_sessionmaker
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 
 from src.project.config import settings
 
@@ -25,10 +24,6 @@ class DatabaseHelper:
             expire_on_commit=False,
         )
 
-        self._scoped_session_factory = async_scoped_session(
-            session_factory=self._session_factory,
-            scopefunc=current_task,
-        )
 
     def get_session_factory(self) -> async_sessionmaker:
         """Возвращает фабрику сессий для подключения к БД"""

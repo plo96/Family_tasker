@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from httpx import AsyncClient
 from fastapi import status
 from sqlalchemy import select
@@ -12,7 +14,7 @@ async def test_add_task(task_url: str, async_client: AsyncClient, new_task: Task
     assert result.status_code == status.HTTP_200_OK
     assert all(i in result.json().items() for i in new_task.model_dump().items())
     # Проверка изменений в БД
-    task_id = result.json()['id']
+    task_id = UUID(result.json()['id'])
     session_factory = get_fake_session_factory()
     async with session_factory() as session:
         stmt = select(Task).filter_by(id=task_id)

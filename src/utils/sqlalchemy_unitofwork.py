@@ -21,8 +21,6 @@ class UnitOfWorkSQLAlchemy(UnitOfWorkBase):
         await self.rollback()
         if isinstance(self._session_factory, async_sessionmaker):
             await self._session.close()
-        if isinstance(self._session_factory, async_scoped_session):
-            await self._session_factory.remove()
 
     async def commit(self):
         """Сохранение текущих изменений в БД"""

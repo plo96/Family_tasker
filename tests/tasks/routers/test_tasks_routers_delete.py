@@ -1,3 +1,4 @@
+from uuid import uuid4
 import pytest
 from fastapi import status
 from httpx import AsyncClient
@@ -11,7 +12,8 @@ from tests.conftest import get_fake_session_factory
 async def test_delete_task_by_id(task_url: str, async_client: AsyncClient, all_tasks_ids: list):
     current_task_number = len(all_tasks_ids)
     for task_id in all_tasks_ids:
-        result = await async_client.delete(url=task_url + f'{task_id}')
+        print(task_url + f'{str(task_id)}')
+        result = await async_client.delete(url=task_url + f'{str(task_id)}')
         assert result.status_code == status.HTTP_200_OK
         current_task_number -= 1
         session_factory = get_fake_session_factory()
@@ -27,5 +29,5 @@ async def test_delete_task_by_id(task_url: str, async_client: AsyncClient, all_t
 
 @pytest.mark.usefixtures("clear_database")
 async def test_bad_delete_task_by_id(task_url: str, async_client: AsyncClient):
-    result = await async_client.delete(url=task_url + '1')
+    result = await async_client.delete(url=task_url + str(uuid4()))
     assert result.status_code == status.HTTP_404_NOT_FOUND

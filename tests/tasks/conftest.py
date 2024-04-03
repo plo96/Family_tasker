@@ -1,4 +1,5 @@
 from random import randint
+from uuid import UUID
 
 import pytest
 from faker import Faker
@@ -67,18 +68,14 @@ async def some_data_added(clear_database: None) -> None:
             stmt = insert(Task).values(**new_task)
             await session.execute(stmt)
         await session.commit()
-    if isinstance(session_factory, async_scoped_session):
-        await session_factory.remove()
 
 
 @pytest.fixture
-async def all_tasks_ids() -> list:
+async def all_tasks_ids() -> list[UUID]:
     session_factory = get_fake_session_factory()
     async with session_factory() as session:
         stmt = select(Task)
         result = await session.execute(stmt)
         all_entities = result.scalars().all()
         all_ids = [entity.id for entity in all_entities]
-    if isinstance(session_factory, async_scoped_session):
-        await session_factory.remove()
     return all_ids

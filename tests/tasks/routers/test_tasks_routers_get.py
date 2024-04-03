@@ -1,4 +1,5 @@
 from random import choice
+from uuid import uuid4
 
 import pytest
 from httpx import AsyncClient
@@ -35,5 +36,5 @@ async def test_get_empty_tasks_list(task_url: str, async_client: AsyncClient):
 
 @pytest.mark.usefixtures("clear_database")
 async def test_get_task_by_bad_id(task_url: str, async_client: AsyncClient):
-	result = await async_client.get(url=task_url + '1')
+	result = await async_client.get(url=task_url + str(uuid4()))
 	assert result.status_code == status.HTTP_404_NOT_FOUND
