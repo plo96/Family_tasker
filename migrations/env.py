@@ -13,7 +13,8 @@ from src.core.models import Base
 # access to the values within the .ini file in use.
 config = context.config
 
-config.set_main_option('sqlalchemy.url', settings.DATABASE_URL_async_sqlite + "?async_fallback=True")
+# config.set_main_option('sqlalchemy.url', settings.DATABASE_URL_async_sqlite + "?async_fallback=True")
+config.set_main_option('sqlalchemy.url', settings.DATABASE_URL_sqlite)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

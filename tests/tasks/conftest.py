@@ -5,11 +5,11 @@ from faker import Faker
 from sqlalchemy import select, insert
 from sqlalchemy.ext.asyncio import async_scoped_session
 
-from src.core.schemas import TaskCreate, TaskUpdate, MAX_TASK_NAME_LENGTH, MAX_TASK_DESCRIPTION_LENGTH, MIN_TASK_PRICE, \
+from src.core.schemas import TaskCreate, MAX_TASK_NAME_LENGTH, MAX_TASK_DESCRIPTION_LENGTH, MIN_TASK_PRICE, \
     MAX_TASK_PRICE
 from src.core.models import Task
 
-from tests.conftest import get_actual_session_factory, NUM_TESTS
+from tests.conftest import get_fake_session_factory, NUM_TESTS
 
 fake = Faker()
 
@@ -61,7 +61,7 @@ def new_task_bad_description() -> dict:
 @pytest.fixture
 async def some_data_added(clear_database: None) -> None:
     new_tasks = [get_new_task_dict() for _ in range(NUM_TESTS)]
-    session_factory = get_actual_session_factory()
+    session_factory = get_fake_session_factory()
     async with session_factory() as session:
         for new_task in new_tasks:
             stmt = insert(Task).values(**new_task)
@@ -73,7 +73,7 @@ async def some_data_added(clear_database: None) -> None:
 
 @pytest.fixture
 async def all_tasks_ids() -> list:
-    session_factory = get_actual_session_factory()
+    session_factory = get_fake_session_factory()
     async with session_factory() as session:
         stmt = select(Task)
         result = await session.execute(stmt)

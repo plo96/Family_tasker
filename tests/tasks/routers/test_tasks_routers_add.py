@@ -4,7 +4,7 @@ from sqlalchemy import select
 
 from src.core.models import Task
 from src.core.schemas import TaskCreate
-from tests.conftest import get_actual_session_factory
+from tests.conftest import get_fake_session_factory
 
 
 async def test_add_task(task_url: str, async_client: AsyncClient, new_task: TaskCreate):
@@ -13,7 +13,7 @@ async def test_add_task(task_url: str, async_client: AsyncClient, new_task: Task
     assert all(i in result.json().items() for i in new_task.model_dump().items())
     # Проверка изменений в БД
     task_id = result.json()['id']
-    session_factory = get_actual_session_factory()
+    session_factory = get_fake_session_factory()
     async with session_factory() as session:
         stmt = select(Task).filter_by(id=task_id)
         result = await session.execute(stmt)
@@ -26,7 +26,7 @@ async def test_add_task_bad_name(task_url: str, async_client: AsyncClient, new_t
     assert result.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
     # Проверка изменений в БД
     task_name = new_task_bad_name["name"]
-    session_factory = get_actual_session_factory()
+    session_factory = get_fake_session_factory()
     async with session_factory() as session:
         stmt = select(Task).filter_by(name=task_name)
         result = await session.execute(stmt)
@@ -39,7 +39,7 @@ async def test_add_task_bad_description(task_url: str, async_client: AsyncClient
     assert result.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
     # Проверка изменений в БД
     task_name = new_task_bad_description["name"]
-    session_factory = get_actual_session_factory()
+    session_factory = get_fake_session_factory()
     async with session_factory() as session:
         stmt = select(Task).filter_by(name=task_name)
         result = await session.execute(stmt)
@@ -52,7 +52,7 @@ async def test_add_task_bad_price_min(task_url: str, async_client: AsyncClient, 
     assert result.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
     # Проверка изменений в БД
     task_name = new_task_bad_price_min["name"]
-    session_factory = get_actual_session_factory()
+    session_factory = get_fake_session_factory()
     async with session_factory() as session:
         stmt = select(Task).filter_by(name=task_name)
         result = await session.execute(stmt)
@@ -65,7 +65,7 @@ async def test_add_task_bad_price_max(task_url: str, async_client: AsyncClient, 
     assert result.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
     # Проверка изменений в БД
     task_name = new_task_bad_price_max["name"]
-    session_factory = get_actual_session_factory()
+    session_factory = get_fake_session_factory()
     async with session_factory() as session:
         stmt = select(Task).filter_by(name=task_name)
         result = await session.execute(stmt)

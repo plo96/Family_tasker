@@ -6,7 +6,7 @@ from sqlalchemy import select
 
 from src.core.models import Task
 from src.core.schemas import TaskCreate
-from tests.conftest import get_actual_session_factory
+from tests.conftest import get_fake_session_factory
 
 
 def get_partial_dict(some_dict: dict) -> tuple[dict, list]:
@@ -28,7 +28,7 @@ async def test_patch_task_by_id(task_url: str, async_client: AsyncClient,
     new_task_dict, list_of_unused_keys = get_partial_dict(new_task_dict)
 
     # Изначальное значение сущности в БД
-    session_factory = get_actual_session_factory()
+    session_factory = get_fake_session_factory()
     async with session_factory() as session:
         stmt = select(Task).filter_by(id=task_id)
         result = await session.execute(stmt)
@@ -56,7 +56,7 @@ async def test_patch_task_by_bad_id(task_url: str, async_client: AsyncClient,
     new_task_dict, list_of_unused_keys = get_partial_dict(new_task_dict)
     result = await async_client.patch(url=task_url + '1', json=new_task_dict)
     assert result.status_code == status.HTTP_404_NOT_FOUND
-    session_factory = get_actual_session_factory()
+    session_factory = get_fake_session_factory()
     async with session_factory() as session:
         stmt = select(Task).filter_by(id=1)
         result = await session.execute(stmt)
@@ -77,7 +77,7 @@ async def test_patch_task_by_id_bad_name(task_url: str, async_client: AsyncClien
         new_task_dict['name'] = bad_name
 
     # Изначальное значение сущности в БД
-    session_factory = get_actual_session_factory()
+    session_factory = get_fake_session_factory()
     async with session_factory() as session:
         stmt = select(Task).filter_by(id=task_id)
         result = await session.execute(stmt)
@@ -110,7 +110,7 @@ async def test_patch_task_by_id_bad_name(task_url: str, async_client: AsyncClien
         new_task_dict['description'] = bad_description
 
     # Изначальное значение сущности в БД
-    session_factory = get_actual_session_factory()
+    session_factory = get_fake_session_factory()
     async with session_factory() as session:
         stmt = select(Task).filter_by(id=task_id)
         result = await session.execute(stmt)
@@ -143,7 +143,7 @@ async def test_patch_task_by_id_bad_price_min(task_url: str, async_client: Async
         new_task_dict['price'] = bad_description
 
     # Изначальное значение сущности в БД
-    session_factory = get_actual_session_factory()
+    session_factory = get_fake_session_factory()
     async with session_factory() as session:
         stmt = select(Task).filter_by(id=task_id)
         result = await session.execute(stmt)
@@ -176,7 +176,7 @@ async def test_patch_task_by_id_bad_price_max(task_url: str, async_client: Async
         new_task_dict['price'] = bad_description
 
     # Изначальное значение сущности в БД
-    session_factory = get_actual_session_factory()
+    session_factory = get_fake_session_factory()
     async with session_factory() as session:
         stmt = select(Task).filter_by(id=task_id)
         result = await session.execute(stmt)

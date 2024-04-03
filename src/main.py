@@ -23,8 +23,8 @@ app = FastAPI(
     title='FamilyTasker',
     lifespan=lifespan
              )
-app.include_router(router)
 
+app.include_router(router)
 
 @app.get('/')
 def say_hello():

@@ -17,7 +17,8 @@ async def test_get_all_tasks(task_url: str, async_client: AsyncClient, all_tasks
 
 
 @pytest.mark.usefixtures("some_data_added")
-async def test_get_task_by_id(task_url: str, async_client: AsyncClient, all_tasks_ids: list):
+async def \
+		test_get_task_by_id(task_url: str, async_client: AsyncClient, all_tasks_ids: list):
 	for _ in range(len(all_tasks_ids)):
 		task_id = choice(all_tasks_ids)
 		result = await async_client.get(url=task_url + f'{task_id}')

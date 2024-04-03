@@ -33,6 +33,12 @@ class Settings(BaseSettings):
         """URL для подключения к БД (aiosqlite)"""
         return f"sqlite+aiosqlite:///{HOME_DIR}/src/database/{self.SQLITE_NAME}"
 
+
+    @property
+    def DATABASE_URL_sqlite(self):
+        """URL для подключения к БД (sqlite3)"""
+        return f"sqlite:///{HOME_DIR}/src/database/{self.SQLITE_NAME}"
+
     @property
     def TEST_DATABASE_URL_async_sqlite(self):
         """URL для подключения к тестовой БД (aiosqlite)"""

@@ -4,7 +4,7 @@ from httpx import AsyncClient
 from sqlalchemy import select
 
 from src.core.models import Task
-from tests.conftest import get_actual_session_factory
+from tests.conftest import get_fake_session_factory
 
 
 @pytest.mark.usefixtures("some_data_added")
@@ -14,7 +14,7 @@ async def test_delete_task_by_id(task_url: str, async_client: AsyncClient, all_t
         result = await async_client.delete(url=task_url + f'{task_id}')
         assert result.status_code == status.HTTP_200_OK
         current_task_number -= 1
-        session_factory = get_actual_session_factory()
+        session_factory = get_fake_session_factory()
         async with session_factory() as session:
             stmt = select(Task)
             result = await session.execute(stmt)

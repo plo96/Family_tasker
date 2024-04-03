@@ -6,7 +6,7 @@ from sqlalchemy import select
 
 from src.core.models import Task
 from src.core.schemas import TaskCreate
-from tests.conftest import get_actual_session_factory
+from tests.conftest import get_fake_session_factory
 
 
 @pytest.mark.usefixtures("some_data_added")
@@ -17,7 +17,7 @@ async def test_put_task_by_id(task_url: str, async_client: AsyncClient,
     assert result.status_code == status.HTTP_200_OK
     assert all(i in result.json().items() for i in new_task.model_dump().items())
     # Проверка изменений в БД
-    session_factory = get_actual_session_factory()
+    session_factory = get_fake_session_factory()
     async with session_factory() as session:
         stmt = select(Task).filter_by(id=task_id)
         result = await session.execute(stmt)
@@ -37,7 +37,7 @@ async def test_put_task_by_id_bad_name(task_url: str, async_client: AsyncClient,
                                        all_tasks_ids: list, new_task_bad_name: dict):
     task_id = choice(all_tasks_ids)
     # Изначальное значение сущности в БД
-    session_factory = get_actual_session_factory()
+    session_factory = get_fake_session_factory()
     async with session_factory() as session:
         stmt = select(Task).filter_by(id=task_id)
         result = await session.execute(stmt)
@@ -61,7 +61,7 @@ async def test_put_task_by_id_bad_description(task_url: str, async_client: Async
                                               all_tasks_ids: list, new_task_bad_description: dict):
     task_id = choice(all_tasks_ids)
     # Изначальное значение сущности в БД
-    session_factory = get_actual_session_factory()
+    session_factory = get_fake_session_factory()
     async with session_factory() as session:
         stmt = select(Task).filter_by(id=task_id)
         result = await session.execute(stmt)
@@ -85,7 +85,7 @@ async def test_put_task_by_id_bad_price_min(task_url: str, async_client: AsyncCl
                                             all_tasks_ids: list, new_task_bad_price_min: dict):
     task_id = choice(all_tasks_ids)
     # Изначальное значение сущности в БД
-    session_factory = get_actual_session_factory()
+    session_factory = get_fake_session_factory()
     async with session_factory() as session:
         stmt = select(Task).filter_by(id=task_id)
         result = await session.execute(stmt)
@@ -109,7 +109,7 @@ async def test_put_task_by_id_bad_price_max(task_url: str, async_client: AsyncCl
                                             all_tasks_ids: list, new_task_bad_price_max: dict):
     task_id = choice(all_tasks_ids)
     # Изначальное значение сущности в БД
-    session_factory = get_actual_session_factory()
+    session_factory = get_fake_session_factory()
     async with session_factory() as session:
         stmt = select(Task).filter_by(id=task_id)
         result = await session.execute(stmt)

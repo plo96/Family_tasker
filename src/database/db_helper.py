@@ -34,10 +34,6 @@ class DatabaseHelper:
         """Возвращает фабрику сессий для подключения к БД"""
         return self._session_factory
 
-    def get_scoped_session_factory(self) -> async_scoped_session:
-        """Возвращает фабрику scoped-сессий для подключения к БД"""
-        return self._scoped_session_factory
-
 
 db_helper = DatabaseHelper(url=settings.DATABASE_URL_async_sqlite,
                            echo=settings.ECHO)  # type: ignore
