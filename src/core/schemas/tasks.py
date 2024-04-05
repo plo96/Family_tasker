@@ -37,17 +37,15 @@ class TaskUpdatePartial(TaskBase):
     price: int = Field(ge=MIN_TASK_PRICE, le=MAX_TASK_PRICE, default=None)
 
 
-class TaskDTO(TaskCreate):
+class TaskDTO(TaskBase):
     """ДТО-класс для преобразования ответа алхимии к pydantic и дальнейшей работы с ней"""
     model_config = ConfigDict(from_attributes=True)
     id: UUID
+    name: str = Field(max_length=MAX_TASK_NAME_LENGTH)
+    description: str = Field(max_length=MAX_TASK_DESCRIPTION_LENGTH)
+    price: int = Field(ge=MIN_TASK_PRICE, le=MAX_TASK_PRICE)
     created_by: Optional[str]
     created_at: Optional[datetime]
+    updated_at: Optional[datetime]
     finished_by: Optional[str]
     finished_at: Optional[datetime]
-
-
-
-
-
-

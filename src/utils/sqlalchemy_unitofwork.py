@@ -3,7 +3,7 @@
 """
 from sqlalchemy.ext.asyncio import async_sessionmaker, async_scoped_session
 
-from src.repositories import TaskRepository
+from src.repositories import TaskRepository, UserRepository
 from .base_unitofwork import UnitOfWorkBase
 
 
@@ -16,11 +16,11 @@ class UnitOfWorkSQLAlchemy(UnitOfWorkBase):
     async def __aenter__(self):
         self._session = self._session_factory()
         self.tasks = TaskRepository(self._session)
+        self.users = UserRepository(self._session)
 
     async def __aexit__(self, *args):
         await self.rollback()
-        if isinstance(self._session_factory, async_sessionmaker):
-            await self._session.close()
+        await self._session.close()
 
     async def commit(self):
         """Сохранение текущих изменений в БД"""

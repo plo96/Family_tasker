@@ -3,12 +3,13 @@
 """
 from abc import ABC, abstractmethod
 
-from src.repositories.tasks import TaskRepository
+from src.repositories import TaskRepository, UserRepository
 
 
 class UnitOfWorkBase(ABC):
     """Базовый абстрактный класс для создания интерфейса UoW"""
     tasks: TaskRepository
+    users: UserRepository
 
     @abstractmethod
     def __init__(self, **kwargs):

@@ -3,6 +3,8 @@
 """
 __all__ = (
     "TaskService",
+    "UserService",
 )
 
 from .tasks import TaskService
+from .users import UserService

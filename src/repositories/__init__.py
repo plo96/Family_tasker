@@ -3,6 +3,8 @@
 """
 __all__ = (
     "TaskRepository",
+    "UserRepository",
 )
 
 from .tasks import TaskRepository
+from .users import UserRepository

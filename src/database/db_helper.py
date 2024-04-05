@@ -24,7 +24,6 @@ class DatabaseHelper:
             expire_on_commit=False,
         )
 
-
     def get_session_factory(self) -> async_sessionmaker:
         """Возвращает фабрику сессий для подключения к БД"""
         return self._session_factory

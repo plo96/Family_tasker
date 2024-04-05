@@ -12,18 +12,6 @@ class TaskService:
     uow: UnitOfWorkBase
     
     @staticmethod
-    async def add_task(task: TaskCreate,
-                       uow: UnitOfWorkBase) -> TaskDTO:
-        """Добавление задачи в БД и сопутствующие действия"""
-        async with uow:
-            task_dict = task.model_dump()
-            res = await uow.tasks.add_one(data=task_dict)
-            task = TaskDTO.model_validate(res)
-            await uow.commit()
-
-        return task
-
-    @staticmethod
     async def get_tasks(uow: UnitOfWorkBase) -> list[TaskDTO]:
         """Запрос всех задач из БД и сопутствующие действия"""
         async with uow:
@@ -31,7 +19,7 @@ class TaskService:
             all_tasks = [TaskDTO.model_validate(task) for task in res]
 
         return all_tasks
-
+    
     @staticmethod
     async def get_task_by_id(task_id: UUID,
                              uow: UnitOfWorkBase) -> TaskDTO:
@@ -42,6 +30,18 @@ class TaskService:
                 raise ObjectNotFoundError
             res = res[0]
             task = TaskDTO.model_validate(res)
+
+        return task
+    
+    @staticmethod
+    async def add_task(task: TaskCreate,
+                       uow: UnitOfWorkBase) -> TaskDTO:
+        """Добавление задачи в БД и сопутствующие действия"""
+        async with uow:
+            task_dict = task.model_dump()
+            res = await uow.tasks.add_one(data=task_dict)
+            task = TaskDTO.model_validate(res)
+            await uow.commit()
 
         return task
 

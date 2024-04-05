@@ -1,27 +1,40 @@
 """
     ОРМ-модель User для пользователей
 """
-from typing import Optional
-from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy.sql import func
 from datetime import datetime
+from enum import Enum
+from typing import Optional
+
+from sqlalchemy.orm import Mapped, mapped_column
 
 from .base import Base
+from .default_values import get_current_time
+
+
+class Roles(Enum):
+    """Список возможных ролей пользователей"""
+    admin = "admin, user"
+    user = "user"
+
+
+class Grade(Enum):
+    """Список возможных званий пользователей"""
+    grade_1 = "the worst grade"
+    grade_2 = "bad grade"
+    grade_3 = "middle grade"
+    grade_4 = "good grade"
+    grade_5 = "the best grade"
 
 
 class User(Base):
     """ОРМ-класс с декларативным объявлением с помощью SQLAlchemy для пользователей"""
-    # id: Mapped[UUID] = mapped_column(Uuid,
-    #                                  primary_key=True,
-    #                                  init=False,
-    #                                  server_default=text(
-    #                                  "CREATE EXTENSION IF NOT EXISTS 'uuid-ossp'; uuid_generate_v4();"))
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str]
-    description: Mapped[Optional[str]]
-    price: Mapped[int]
-    created_by: Mapped[Optional[str]]
-    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
-    # created_at: Mapped[datetime] = mapped_column(default=func(''))
-    finished_by: Mapped[Optional[str]]
-    finished_at: Mapped[Optional[datetime]]
+    hashed_password: Mapped[str]
+    email: Mapped[str]
+    role: Mapped[Roles]
+    grade: Mapped[Grade] = mapped_column(default="grade_1")
+    count: Mapped[int] = mapped_column(default=0)
+    registered_at: Mapped[datetime] = mapped_column(default=get_current_time)
+    updated_at: Mapped[Optional[datetime]] = mapped_column(default=None, onupdate=get_current_time)
+    is_deleted: Mapped[bool] = mapped_column(default=False)
+    
