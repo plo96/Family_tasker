@@ -9,8 +9,8 @@ from fastapi.responses import JSONResponse
 from src.project.exceptions import ObjectNotFoundError
 from src.core.schemas import TaskDTO, TaskCreate, TaskUpdate, TaskUpdatePartial
 from src.core.dependencies import get_actual_uow
-from src.services import TaskService
-from src.utils import UnitOfWorkBase
+from src.layers.services import TaskService
+from src.layers.utils import UnitOfWorkBase
 
 
 router = APIRouter(prefix="/tasks",

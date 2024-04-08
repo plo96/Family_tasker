@@ -1,7 +1,7 @@
 """
     Инициализация репозитория для ОРМ-модели User
 """
-from src.utils import SQLAlchemyRepository
+from src.layers.utils import SQLAlchemyRepository
 from src.core.models import User
 
 

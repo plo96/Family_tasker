@@ -23,12 +23,12 @@ class BaseRepository(ABC):
         ...
 
     @abstractmethod
-    async def delete_one(self, entity):
+    async def delete_one_entity(self, entity):
         """Удаление одной сущности, переданной в данный метод"""
         ...
 
     @abstractmethod
-    async def update_one(self, entity, data: dict):
+    async def update_one_entity(self, entity, data: dict):
         """Изменение одной сущности, переданной в данный метод.
         Устанавливаются значения параметров в соответствии с переданным словарём"""
         ...

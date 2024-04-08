@@ -3,7 +3,7 @@
 """
 from sqlalchemy.ext.asyncio import async_sessionmaker, async_scoped_session
 
-from src.repositories import TaskRepository, UserRepository
+from src.layers.repositories import TaskRepository, UserRepository
 from .base_unitofwork import UnitOfWorkBase
 
 

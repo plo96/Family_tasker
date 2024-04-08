@@ -9,7 +9,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 import uvicorn
 
-from src.routers import router
+from src.layers.routers import router
 
 
 @asynccontextmanager
@@ -22,7 +22,7 @@ async def lifespan(app: FastAPI):    # noqa
 app = FastAPI(
     title='FamilyTasker',
     lifespan=lifespan
-             )
+)
 
 app.include_router(router)
 

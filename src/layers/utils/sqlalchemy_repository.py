@@ -33,11 +33,11 @@ class SQLAlchemyRepository(BaseRepository):
         res = await self.session.execute(stmt)
         return list(res.scalars().all())
 
-    async def delete_one(self, entity: model) -> None:
+    async def delete_one_entity(self, entity: model) -> None:
         await self.session.delete(entity)
         await self.session.flush()
 
-    async def update_one(self, entity: model, data: dict) -> model:
+    async def update_one_entity(self, entity: model, data: dict) -> model:
         for name, value in data.items():
             setattr(entity, name, value)
         await self.session.flush()

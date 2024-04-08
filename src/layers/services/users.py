@@ -3,13 +3,36 @@
 """
 from uuid import UUID
 
-from src.utils import UnitOfWorkBase
-from src.project.exceptions import ObjectNotFoundError
-from src.core.schemas import UserCreate, UserDTO, UserUpdate, UserUpdatePartial
+from src.auth.security import pwd_context, create_jwt_token
+from src.layers.utils import UnitOfWorkBase
+from src.project.exceptions import ObjectNotFoundError, PasswordIsNotCorrect
+from src.core.schemas import UserCreate, UserDTO, UserUpdatePartial, UserCheck
 
 
 class UserService:
 	uow: UnitOfWorkBase
+	
+	@staticmethod
+	async def get_token(
+			uow: UnitOfWorkBase,
+			user_check: UserCheck
+	) -> str:
+		"""Проверка пользователя и выдача токена"""
+		async with uow:
+			res = await uow.users.get_by_params(name=user_check.name)
+			if not res:
+				raise ObjectNotFoundError
+			res = res[0]
+			user = UserDTO.model_validate(res)
+			
+		is_password_correct = pwd_context.verify(user_check.password, user.hashed_password)
+		if not is_password_correct:
+			raise PasswordIsNotCorrect
+		
+		token = create_jwt_token({"id": user.id})
+		
+		return token
+		
 	
 	@staticmethod
 	async def get_users(uow: UnitOfWorkBase) -> list[UserDTO]:
@@ -51,26 +74,25 @@ class UserService:
 								uow: UnitOfWorkBase) -> None:
 		"""Установление для пользователя статуса "удалён" по id из БД и сопутствующие действия"""
 		async with uow:
-			res = await uow.tasks.get_by_params(id=user_id)
+			res = await uow.users.get_by_params(id=user_id)
 			if not res:
 				raise ObjectNotFoundError
 			entity = res[0]
-			await uow.users.update_one(entity=entity, data={'is_deleted': True})
+			await uow.users.update_one_entity(entity=entity, data={'is_deleted': True})
 			await uow.commit()
-#
-# @staticmethod
-# async def update_task_by_id(task_id: UUID,
-# 							updated_task: TaskUpdate | TaskUpdatePartial,
-# 							uow: UnitOfWorkBase) -> TaskDTO:
-# 	"""Частичное или полное изменение одной задачи по id из БД и сопутствующие действия"""
-# 	async with uow:
-# 		res = await uow.tasks.get_by_params(id=task_id)
-# 		if not res:
-# 			raise ObjectNotFoundError
-# 		entity = res[0]
-# 		task_dict = updated_task.model_dump(exclude_unset=True, exclude_none=True)
-# 		res = await uow.tasks.update_one(entity=entity, data=task_dict)
-# 		task = TaskDTO.model_validate(res)
-# 		await uow.commit()
-#
-# 	return task
+	
+	@staticmethod
+	async def update_user_by_id(user_id: UUID,
+								updated_user: UserUpdatePartial,
+								uow: UnitOfWorkBase) -> UserDTO:
+		"""Частичное или полное изменение одного пользователя по id из БД и сопутствующие действия"""
+		async with uow:
+			res = await uow.users.get_by_params(id=user_id)
+			if not res:
+				raise ObjectNotFoundError
+			entity = res[0]
+			user_dict = updated_user.model_dump(exclude_unset=True, exclude_none=True)
+			res = await uow.users.update_one_entity(entity=entity, data=user_dict)
+			user = UserDTO.model_validate(res)
+			await uow.commit()
+		return user

@@ -3,7 +3,7 @@
 """
 from uuid import UUID
 
-from src.utils import UnitOfWorkBase
+from src.layers.utils import UnitOfWorkBase
 from src.project.exceptions import ObjectNotFoundError
 from src.core.schemas import TaskCreate, TaskDTO, TaskUpdate, TaskUpdatePartial
 
@@ -54,7 +54,7 @@ class TaskService:
             if not res:
                 raise ObjectNotFoundError
             entity = res[0]
-            await uow.tasks.delete_one(entity=entity)
+            await uow.tasks.delete_one_entity(entity=entity)
             await uow.commit()
 
     @staticmethod
@@ -68,7 +68,7 @@ class TaskService:
                 raise ObjectNotFoundError
             entity = res[0]
             task_dict = updated_task.model_dump(exclude_unset=True, exclude_none=True)
-            res = await uow.tasks.update_one(entity=entity, data=task_dict)
+            res = await uow.tasks.update_one_entity(entity=entity, data=task_dict)
             task = TaskDTO.model_validate(res)
             await uow.commit()
 

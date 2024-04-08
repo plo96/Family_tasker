@@ -1,7 +1,7 @@
 """
     Инициализация репозитория для ОРМ-модели Task
 """
-from src.utils import SQLAlchemyRepository
+from src.layers.utils import SQLAlchemyRepository
 from src.core.models import Task
 
 

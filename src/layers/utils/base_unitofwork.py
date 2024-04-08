@@ -3,7 +3,7 @@
 """
 from abc import ABC, abstractmethod
 
-from src.repositories import TaskRepository, UserRepository
+from src.layers.repositories import TaskRepository, UserRepository
 
 
 class UnitOfWorkBase(ABC):
