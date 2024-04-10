@@ -1,3 +1,4 @@
+.env
 .venv/
 venv/
 .idea/
@@ -8,3 +9,4 @@ src/__pycache__/
 requirements.txt
 tests/tasks/.pytest_cache/
 tests/.pytest_cache/
+.pytest_cache/

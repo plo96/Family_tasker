@@ -20,8 +20,10 @@ async def lifespan(app: FastAPI):    # noqa
     print('Server stops')
 
 app = FastAPI(
-    title='FamilyTasker',
-    lifespan=lifespan
+    title="FamilyTasker",
+    description="Multi-person ToDoList with registration, authentication, notifications, rating system",
+    version="0.1.0",
+    lifespan=lifespan,
 )
 
 app.include_router(router)

@@ -3,6 +3,7 @@
 """
 from typing import Callable
 
+from uuid import UUID
 from fastapi import Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import async_sessionmaker
 
@@ -27,13 +28,15 @@ async def get_current_user(token: str = Depends(oauth2_scheme),
     decoded_data = verify_jwt_token(token)
     if not decoded_data:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="invalid token")
-    
+
+    decoded_data["id"] = UUID(decoded_data["id"])
     async with uow:
         result = await uow.users.get_by_params(id=decoded_data["id"])
         if not result:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="user not found")
-        user = result[0]
-
+        result = result[0]
+        user = UserDTO.model_validate(result)
+    
     if user.is_deleted:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="user not allowed")
 
@@ -43,7 +46,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme),
 def get_current_user_with_role(role: str) -> Callable[[UserDTO], UserDTO]:
     """Возвращение сущности текущего пользователя в случае наличия у него требуемой роли"""
     def role_validator(current_user: UserDTO = Depends(get_current_user)) -> UserDTO:
-        if role not in current_user.roles:
+        if role not in current_user.role:
             raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail="insufficient permissions")
         return current_user
     

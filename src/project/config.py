@@ -22,6 +22,10 @@ class Settings(BaseSettings):
 
     ECHO: bool
     TEST_ECHO: bool
+    
+    SECRET_KEY: str
+    ALGORITHM: str
+    EXPIRATION_TIME: int
 
     @property
     def DATABASE_URL_asyncpg(self):

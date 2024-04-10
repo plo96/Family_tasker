@@ -27,7 +27,7 @@ class TaskService:
         async with uow:
             res = await uow.tasks.get_by_params(id=task_id)
             if not res:
-                raise ObjectNotFoundError
+                raise ObjectNotFoundError(object_type='task', parameter='id')
             res = res[0]
             task = TaskDTO.model_validate(res)
 
@@ -52,7 +52,7 @@ class TaskService:
         async with uow:
             res = await uow.tasks.get_by_params(id=task_id)
             if not res:
-                raise ObjectNotFoundError
+                raise ObjectNotFoundError(object_type='task', parameter='id')
             entity = res[0]
             await uow.tasks.delete_one_entity(entity=entity)
             await uow.commit()
@@ -65,7 +65,7 @@ class TaskService:
         async with uow:
             res = await uow.tasks.get_by_params(id=task_id)
             if not res:
-                raise ObjectNotFoundError
+                raise ObjectNotFoundError(object_type='task', parameter='id')
             entity = res[0]
             task_dict = updated_task.model_dump(exclude_unset=True, exclude_none=True)
             res = await uow.tasks.update_one_entity(entity=entity, data=task_dict)
