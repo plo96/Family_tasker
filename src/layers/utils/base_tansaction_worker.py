@@ -1,13 +1,13 @@
 """
-    Интерфейс для работы с UnitOfWork
+    Интерфейс для единого метода работы с транзакциями.
 """
 from abc import ABC, abstractmethod
 
 from src.layers.repositories import TaskRepository, UserRepository
 
 
-class UnitOfWorkBase(ABC):
-    """Базовый абстрактный класс для создания интерфейса UoW"""
+class TransactionWorkerBase(ABC):
+    """Базовый абстрактный класс для создания интерфейса TransactionWorkerBase"""
     tasks: TaskRepository
     users: UserRepository
 

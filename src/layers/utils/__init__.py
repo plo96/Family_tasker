@@ -4,11 +4,11 @@
 __all__ = (
     "BaseRepository",
     "SQLAlchemyRepository",
-    "UnitOfWorkBase",
-    "UnitOfWorkSQLAlchemy",
+    "TransactionWorkerBase",
+    "TransactionWorkerSQLAlchemy",
 )
 
 from .sqlalchemy_repository import SQLAlchemyRepository
 from .base_repository import BaseRepository
-from .base_unitofwork import UnitOfWorkBase
-from .sqlalchemy_unitofwork import UnitOfWorkSQLAlchemy
+from .base_tansaction_worker import TransactionWorkerBase
+from .sqlalchemy_transaction_worker import TransactionWorkerSQLAlchemy

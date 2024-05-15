@@ -1,14 +1,14 @@
 """
-    Реализация конкретного UnitOfWork на базе SQLAlchemy
+    Реализация конкретного TransactionWorker на базе SQLAlchemy
 """
 from sqlalchemy.ext.asyncio import async_sessionmaker, async_scoped_session
 
 from src.layers.repositories import TaskRepository, UserRepository
-from .base_unitofwork import UnitOfWorkBase
+from .base_tansaction_worker import TransactionWorkerBase
 
 
-class UnitOfWorkSQLAlchemy(UnitOfWorkBase):
-    """Реализация UoW на базе SQLAlchemy"""
+class TransactionWorkerSQLAlchemy(TransactionWorkerBase):
+    """Реализация TransactionWorker на базе SQLAlchemy"""
 
     def __init__(self, session_factory: async_sessionmaker | async_scoped_session):
         self._session_factory = session_factory
