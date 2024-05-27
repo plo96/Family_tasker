@@ -43,7 +43,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme),
     return user
 
 
-def get_current_user_with_role(role: str) -> Callable[[UserDTO], UserDTO]:
+def get_current_user_having_role(role: str) -> Callable[[UserDTO], UserDTO]:
     """Возвращение сущности текущего пользователя в случае наличия у него требуемой роли"""
     def role_validator(current_user: UserDTO = Depends(get_current_user)) -> UserDTO:
         if role not in current_user.role:

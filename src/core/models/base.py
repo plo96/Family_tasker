@@ -17,7 +17,7 @@ class Base(DeclarativeBase):
 	id: Mapped[UUID] = mapped_column(
 		Uuid,
 		primary_key=True,
-		default=get_uuid
+		default=get_uuid,
 	)
 	
 	@declared_attr.directive

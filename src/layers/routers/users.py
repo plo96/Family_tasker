@@ -8,7 +8,7 @@ from fastapi.responses import JSONResponse
 
 from src.project.exceptions import exceptions_processing
 from src.core.schemas import UserCreate, UserDTO, UserCheck
-from src.core.dependencies import get_actual_uow, get_current_user_with_role, get_current_user
+from src.core.dependencies import get_actual_uow, get_current_user_having_role, get_current_user
 from src.layers.services import UserService
 from src.layers.utils import UnitOfWorkBase
 
@@ -58,11 +58,11 @@ async def get_user_by_id(
 
 @router.post("/", response_model=UserDTO)
 @exceptions_processing
-async def add_task(
+async def add_user(
         new_user: UserCreate,
         uow: UnitOfWorkBase = Depends(get_actual_uow)
 ) -> UserDTO:
-    """Эндпоинт для добавления одной задачи"""
+    """Эндпоинт для добавления одного пользователя."""
     return await UserService.add_user(new_user, uow=uow)
 
 
@@ -70,9 +70,9 @@ async def add_task(
 @exceptions_processing
 async def delete_user_by_id(
         user_id: UUID,
-        uow: UnitOfWorkBase = Depends(get_actual_uow)
+        uow: UnitOfWorkBase = Depends(get_actual_uow),
 ) -> JSONResponse:
-    """Эндпоинт для удаления одной задачи по id"""
+    """Эндпоинт для удаления одного пользователя по id"""
     await UserService.delete_user_by_id(user_id, uow=uow)
     return JSONResponse(status_code=status.HTTP_200_OK,
                         content={'detail': f'Task with id={user_id} is successfully deleted'})

@@ -10,7 +10,7 @@ from .base_repository import BaseRepository
 
 
 class SQLAlchemyRepository(BaseRepository):
-    """SQLAlchemy-класс для работы с рапозиторием для конкретной модели ORM"""
+    """SQLAlchemy-класс для работы с репозиторием для конкретной модели ORM"""
     model: Any = None
 
     def __init__(self, session: AsyncSession | async_scoped_session):

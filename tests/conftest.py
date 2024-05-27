@@ -7,7 +7,7 @@ import pytest
 from fastapi.testclient import TestClient
 from httpx import AsyncClient, ASGITransport
 from sqlalchemy import NullPool
-from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine, async_scoped_session
+from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
 from src.core.dependencies import get_actual_session_factory
 from src.project import settings

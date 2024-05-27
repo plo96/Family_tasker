@@ -4,7 +4,6 @@ from uuid import UUID
 import pytest
 from faker import Faker
 from sqlalchemy import select, insert
-from sqlalchemy.ext.asyncio import async_scoped_session
 
 from src.core.schemas import TaskCreate, MAX_TASK_NAME_LENGTH, MAX_TASK_DESCRIPTION_LENGTH, MIN_TASK_PRICE, \
     MAX_TASK_PRICE
