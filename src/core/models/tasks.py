@@ -1,16 +1,16 @@
 """
-    ОРМ-модель Task для задач
+    Модель представления сущности задачи в БД.
 """
 from typing import Optional
 from datetime import datetime
 
 from sqlalchemy.orm import Mapped, mapped_column
 
-from .base import Base
+from .base_model import BaseModel
 from .default_values import get_current_time
 
 
-class Task(Base):
+class Task(BaseModel):
     """ОРМ-класс с декларативным объявлением с помощью SQLAlchemy для задач"""
     name: Mapped[str]
     description: Mapped[Optional[str]]

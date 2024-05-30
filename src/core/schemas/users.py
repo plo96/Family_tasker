@@ -13,19 +13,19 @@ MIN_PASSWORD_LENGTH: int = 8
 
 
 class UserBase(BaseModel):
-    """Базовая pydantic-модель для пользователей"""
+    """Базовая схема для сущности пользователя."""
     name: str = Field(max_length=MAX_USER_NAME_LENGTH, min_length=MIN_USER_NAME_LENGTH)
 
 
 class UserCreate(UserBase):
-    """pydantic-модель для создания пользователя"""
+    """Схема для создания пользователя."""
     password: str = Field(min_length=MIN_PASSWORD_LENGTH)
     email: str
     role: str
 
 
 class UserUpdatePartial(UserBase):
-    """pydantic-модель для частичного изменения пользователя"""
+    """Схема для частичного изменения пользователя."""
     name: str = Field(max_length=MAX_USER_NAME_LENGTH, min_length=MIN_USER_NAME_LENGTH, default=None)
     password: str = Field(min_length=MIN_PASSWORD_LENGTH, default=None)
     email: str = Field(default=None)
@@ -33,11 +33,12 @@ class UserUpdatePartial(UserBase):
     
     
 class UserCheck(UserBase):
+    """Схема для аутентификации пользователя."""
     password: str = Field(min_length=MIN_PASSWORD_LENGTH)
 
 
 class UserDTO(UserBase):
-    """ДТО-класс для преобразования ответа алхимии к pydantic и дальнейшей работы с ней"""
+    """ДТО-класс для сущности пользователя."""
     model_config = ConfigDict(from_attributes=True)
     id: UUID
     hashed_password: str

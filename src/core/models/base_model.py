@@ -1,5 +1,5 @@
 """
-    Инициализация базового класса для последующего наследования от него всех ОРМ-моделей
+    Инициализация базового класса для последующего наследования от него всех ОРМ-моделей.
 """
 
 from uuid import UUID
@@ -7,11 +7,11 @@ from uuid import UUID
 from sqlalchemy.orm import DeclarativeBase, declared_attr, mapped_column, Mapped
 from sqlalchemy import Uuid
 
-from .default_values import get_uuid
+from src.core.models.default_values import get_uuid
 
 
-class Base(DeclarativeBase):
-	"""Базовый класс для всех ОРМ-моделей для аккумуляции metadata"""
+class BaseModel(DeclarativeBase):
+	"""Базовый класс для всех ОРМ-моделей."""
 	__abstract__ = True
 	
 	id: Mapped[UUID] = mapped_column(

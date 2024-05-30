@@ -1,15 +1,19 @@
 """
-    Интерфейс для работы с UnitOfWork
+    Интерфейс класса для работы со всеми репозиториями в рамках одной сессии
+    через асинхронный контекстный менеджер.
 """
 from abc import ABC, abstractmethod
 
 from src.layers.repositories import TaskRepository, UserRepository
 
 
-class UnitOfWorkBase(ABC):
-    """Базовый абстрактный класс для подключения к БД в контекстном менеджере."""
-    tasks: TaskRepository
+class IProxyAccessRepositories(ABC):
+    """
+    Базовый абстрактный класс для подключения к БД в контекстном менеджере.
+    Единая точка доступа ко всем репозиториям различных сущностей.
+    """
     users: UserRepository
+    tasks: TaskRepository
 
     @abstractmethod
     def __init__(self, **kwargs):
