@@ -7,11 +7,11 @@ import pytest
 from fastapi.testclient import TestClient
 from httpx import AsyncClient, ASGITransport
 from sqlalchemy import NullPool
-from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine, async_scoped_session
+from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
 from src.core.dependencies import get_actual_session_factory
 from src.project import settings
-from src.core.models import Base
+from src.core.models import BaseModel
 from src.main import app
 
 NUM_TESTS = 5
@@ -23,7 +23,7 @@ fake_session_factory = async_sessionmaker(bind=fake_engine,
                                           autoflush=False,
                                           autocommit=False,
                                           expire_on_commit=False)
-metadata = Base.metadata
+metadata = BaseModel.metadata
 metadata.bind = fake_engine
 
 

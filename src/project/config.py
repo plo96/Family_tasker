@@ -4,7 +4,7 @@
 from pathlib import Path
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-HOME_DIR = Path(__file__).parent.parent.parent
+HOME_DIR = Path(__file__).parent.parent.parent.absolute()
 
 
 class Settings(BaseSettings):

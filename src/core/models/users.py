@@ -1,5 +1,5 @@
 """
-    ОРМ-модель User для пользователей
+    Модель представления сущности пользователя в БД.
 """
 from datetime import datetime
 from enum import Enum
@@ -7,18 +7,18 @@ from typing import Optional
 
 from sqlalchemy.orm import Mapped, mapped_column
 
-from .base import Base
+from .base_model import BaseModel
 from .default_values import get_current_time
 
 
 class Roles(Enum):
-    """Список возможных ролей пользователей"""
+    """Список возможных ролей пользователей."""
     admin = "admin, user"
     user = "user"
 
 
 class Grade(Enum):
-    """Список возможных званий пользователей"""
+    """Список возможных званий пользователей."""
     grade_1 = "the worst grade"
     grade_2 = "bad grade"
     grade_3 = "middle grade"
@@ -26,8 +26,8 @@ class Grade(Enum):
     grade_5 = "the best grade"
 
 
-class User(Base):
-    """ОРМ-класс с декларативным объявлением с помощью SQLAlchemy для пользователей"""
+class User(BaseModel):
+    """ОРМ-модель с декларативным объявлением с помощью SQLAlchemy для пользователей."""
     name: Mapped[str]
     hashed_password: Mapped[str]
     email: Mapped[str]

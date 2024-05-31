@@ -2,13 +2,9 @@
     Интерфейсы и реализации репозитория и UoW
 """
 __all__ = (
-    "BaseRepository",
-    "SQLAlchemyRepository",
-    "TransactionWorkerBase",
-    "TransactionWorkerSQLAlchemy",
+	"IProxyAccessRepositories",
+	"ProxyAccessRepositories",
 )
 
-from .sqlalchemy_repository import SQLAlchemyRepository
-from .base_repository import BaseRepository
-from .base_tansaction_worker import TransactionWorkerBase
-from .sqlalchemy_transaction_worker import TransactionWorkerSQLAlchemy
+from .i_proxy_access_repositories import IProxyAccessRepositories
+from .proxy_access_repositories import ProxyAccessRepositories
