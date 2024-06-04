@@ -1,5 +1,5 @@
 """
-    Сервис для осуществления бизнес-логики работы с Task
+    Сервис для осуществления бизнес-логики работы с сущностью задач.
 """
 from uuid import UUID
 
@@ -15,7 +15,7 @@ class TaskService:
     async def get_tasks(
             proxy_access_repositories: IProxyAccessRepositories,
     ) -> list[TaskDTO]:
-        """Запрос всех задач из БД и сопутствующие действия"""
+        """Запрос всех задач из БД."""
         async with proxy_access_repositories:
             res = await proxy_access_repositories.tasks.get_all()
             all_tasks = [TaskDTO.model_validate(task) for task in res]
@@ -27,7 +27,7 @@ class TaskService:
             task_id: UUID,
             proxy_access_repositories: IProxyAccessRepositories,
     ) -> TaskDTO:
-        """Запрос одной задачи по id из БД и сопутствующие действия"""
+        """Запрос одной задачи по id из БД."""
         async with proxy_access_repositories:
             res = await proxy_access_repositories.tasks.get_by_params(id=task_id)
             if not res:
@@ -42,7 +42,7 @@ class TaskService:
             task: TaskCreate,
             proxy_access_repositories: IProxyAccessRepositories,
     ) -> TaskDTO:
-        """Добавление задачи в БД и сопутствующие действия"""
+        """Добавление задачи в БД и сопутствующие действия."""
         async with proxy_access_repositories:
             task_dict = task.model_dump()
             res = await proxy_access_repositories.tasks.add_one(data=task_dict)
@@ -56,7 +56,7 @@ class TaskService:
             task_id: UUID,
             proxy_access_repositories: IProxyAccessRepositories,
     ) -> None:
-        """Удаление одной задачи по id из БД и сопутствующие действия"""
+        """Удаление одной задачи по id из БД и сопутствующие действия."""
         async with proxy_access_repositories:
             res = await proxy_access_repositories.tasks.get_by_params(id=task_id)
             if not res:
@@ -68,16 +68,16 @@ class TaskService:
     @staticmethod
     async def update_task_by_id(
             task_id: UUID,
-            updated_task: TaskUpdate | TaskUpdatePartial,
+            task_changing: TaskUpdate | TaskUpdatePartial,
             proxy_access_repositories: IProxyAccessRepositories,
     ) -> TaskDTO:
-        """Частичное или полное изменение одной задачи по id из БД и сопутствующие действия"""
+        """Частичное или полное изменение одной задачи по id из БД и сопутствующие действия."""
         async with proxy_access_repositories:
             res = await proxy_access_repositories.tasks.get_by_params(id=task_id)
             if not res:
                 raise ObjectNotFoundError(object_type='task', parameter='id')
             entity = res[0]
-            task_dict = updated_task.model_dump(exclude_unset=True, exclude_none=True)
+            task_dict = task_changing.model_dump(exclude_unset=True, exclude_none=True)
             res = await proxy_access_repositories.tasks.update_one_entity(entity=entity, data=task_dict)
             task = TaskDTO.model_validate(res)
             await proxy_access_repositories.commit()

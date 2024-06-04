@@ -37,4 +37,5 @@ class User(BaseModel):
     registered_at: Mapped[datetime] = mapped_column(default=get_current_time)
     updated_at: Mapped[Optional[datetime]] = mapped_column(default=None, onupdate=get_current_time)
     is_deleted: Mapped[bool] = mapped_column(default=False)
+    is_verified: Mapped[bool] = mapped_column(default=False)
     

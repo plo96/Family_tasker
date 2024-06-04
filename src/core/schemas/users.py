@@ -2,7 +2,10 @@
     Создание различных вариаций класса User на базе Pydantic для последующей валидации данных
 """
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Any
+
+from pydantic.main import IncEx
+from typing_extensions import Literal
 
 from uuid import UUID
 from pydantic import BaseModel, Field, ConfigDict
@@ -22,7 +25,7 @@ class UserCreate(UserBase):
     password: str = Field(min_length=MIN_PASSWORD_LENGTH)
     email: str
     role: str
-
+    
 
 class UserUpdatePartial(UserBase):
     """Схема для частичного изменения пользователя."""
@@ -49,4 +52,5 @@ class UserDTO(UserBase):
     registered_at: datetime
     updated_at: Optional[datetime]
     is_deleted: bool
+    is_verified: bool
  

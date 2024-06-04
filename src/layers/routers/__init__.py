@@ -7,7 +7,7 @@ __all__ = (
 
 from fastapi import APIRouter
 
-from .tasks import router as task_router
+from .tasks_router import router as task_router
 from .users import router as user_router
 
 router = APIRouter()

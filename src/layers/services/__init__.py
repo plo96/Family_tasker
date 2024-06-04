@@ -6,5 +6,5 @@ __all__ = (
     "UserService",
 )
 
-from .tasks import TaskService
-from .users import UserService
+from .tasks_service import TaskService
+from .users_service import UserService

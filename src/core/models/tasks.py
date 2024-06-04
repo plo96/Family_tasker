@@ -6,8 +6,8 @@ from datetime import datetime
 
 from sqlalchemy.orm import Mapped, mapped_column
 
-from .base_model import BaseModel
-from .default_values import get_current_time
+from src.core.models.base_model import BaseModel
+from src.core.models.default_values import get_current_time
 
 
 class Task(BaseModel):

@@ -1,10 +1,10 @@
 """
-    Интерфейсы и реализации репозитория и UoW
+    Пакеты с дополнительными утилитами.
 """
 __all__ = (
-	"IProxyAccessRepositories",
-	"ProxyAccessRepositories",
+	"proxy_access_repositories",
+	"celery_app",
 )
 
-from .i_proxy_access_repositories import IProxyAccessRepositories
-from .proxy_access_repositories import ProxyAccessRepositories
+from . import proxy_access_repositories
+from . import celery_app

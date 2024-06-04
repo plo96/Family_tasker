@@ -14,31 +14,31 @@ MAX_TASK_PRICE: int = 10
 
 
 class TaskBase(BaseModel):
-    """Базовая pydantic-модель для задач"""
+    """Базовая pydantic-схема для задач."""
     pass
 
 
 class TaskCreate(TaskBase):
-    """pydantic-модель для создания задач"""
+    """Схема для создания задачи."""
     name: str = Field(max_length=MAX_TASK_NAME_LENGTH)
     description: str = Field(max_length=MAX_TASK_DESCRIPTION_LENGTH)
     price: int = Field(ge=MIN_TASK_PRICE, le=MAX_TASK_PRICE)
 
 
 class TaskUpdate(TaskCreate):
-    """pydantic-модель для полного изменения задач"""
+    """Схема для полного изменения задачи."""
     pass
 
 
 class TaskUpdatePartial(TaskBase):
-    """pydantic-модель для частичного изменения задач"""
+    """Схема для частичного изменения задачи."""
     name: str = Field(max_length=MAX_TASK_NAME_LENGTH, default=None)
     description: str = Field(max_length=MAX_TASK_DESCRIPTION_LENGTH, default=None)
     price: int = Field(ge=MIN_TASK_PRICE, le=MAX_TASK_PRICE, default=None)
 
 
 class TaskDTO(TaskBase):
-    """ДТО-класс для преобразования ответа алхимии к pydantic и дальнейшей работы с ней"""
+    """ДТО-класс для сущности задачи."""
     model_config = ConfigDict(from_attributes=True)
     id: UUID
     name: str = Field(max_length=MAX_TASK_NAME_LENGTH)
