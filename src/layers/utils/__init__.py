@@ -3,8 +3,8 @@
 """
 __all__ = (
 	"proxy_access_repositories",
-	"celery_app",
+	"background_tasker",
 )
 
 from . import proxy_access_repositories
-from . import celery_app
+from . import background_tasker

@@ -1,18 +1,18 @@
 """
-    Роутер для взаимодействия с сущностью пользователей.
+    Роутер для взаимодействия с сущностью пользователей (для пользователей).
 """
 
 from fastapi import APIRouter, status, Depends
 from fastapi.responses import JSONResponse
 
+from src.core.dependencies import get_current_user_having_role
 from src.project.exceptions import endpoint_exceptions_processing
 from src.core.schemas import UserCreate, UserDTO, UserCheck
-from src.core.dependencies import get_proxy_access_repositories
-from src.layers.services import UserService
-from src.layers.utils import IProxyAccessRepositories
+from src.layers.services import users_service
 
 router = APIRouter(
     tags=["Users", "AllUsers"],
+    dependencies=[Depends(get_current_user_having_role('user')), ],
 )
 
 
@@ -20,19 +20,16 @@ router = APIRouter(
 @endpoint_exceptions_processing
 async def token(
         user_check: UserCheck,
-        proxy_access_repositories: IProxyAccessRepositories = Depends(get_proxy_access_repositories),
 ) -> JSONResponse:
     """
     Эндпоинт для получения токена по имени и паролю.
     :param user_check: Экземпляр UserCheck, содержащий имя и пароль пользователя.
-    :param proxy_access_repositories: Единая точка доступа к репозиториям, передается через DI.
     :return: Ответ JSON со статусом 200 и токеном в теле ответа в случае успешного прохождения аутентификации.
              UserNotExistError в случае отсутствия пользователя с таким именем.
              UserNotAllowedError в случае если пользователь с таким именем удалён или не верифицирован.
              PasswordIsNotCorrect в случае если пароль пользователя неверен.
     """
-    token = await UserService.get_token(
-        proxy_access_repositories=proxy_access_repositories,
+    token = await users_service.get_token(
         user_check=user_check,
     )
     return JSONResponse(status_code=status.HTTP_200_OK,
@@ -43,15 +40,12 @@ async def token(
 @endpoint_exceptions_processing
 async def add_user(
         new_user: UserCreate,
-        proxy_access_repositories: IProxyAccessRepositories = Depends(get_proxy_access_repositories),
 ) -> UserDTO:
     """
     Эндпоинт для добавления одного пользователя.
     :param new_user: Данные для создания нового пользователя в виде экземпляра UserCreate.
-    :param proxy_access_repositories: Единая точка доступа к репозиториям, передается через DI.
     :return: Экземпляр UserDTO, соответствующий новой созданному пользователю.
     """
-    return await UserService.add_user(
-        proxy_access_repositories=proxy_access_repositories,
+    return await users_service.add_user(
         new_user=new_user,
     )

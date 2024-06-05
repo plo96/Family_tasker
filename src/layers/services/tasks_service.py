@@ -3,83 +3,84 @@
 """
 from uuid import UUID
 
-from src.layers.utils import IProxyAccessRepositories
+from src.layers.utils.proxy_access_repositories import IProxyAccessRepositories
 from src.project.exceptions import ObjectNotFoundError
 from src.core.schemas import TaskCreate, TaskDTO, TaskUpdate, TaskUpdatePartial
 
 
 class TaskService:
     proxy_access_repositories: IProxyAccessRepositories
-    
-    @staticmethod
-    async def get_tasks(
+
+    def __init__(
+            self,
             proxy_access_repositories: IProxyAccessRepositories,
+    ):
+        self.proxy_access_repositories = proxy_access_repositories
+
+    async def get_tasks(
+        self,
     ) -> list[TaskDTO]:
         """Запрос всех задач из БД."""
-        async with proxy_access_repositories:
-            res = await proxy_access_repositories.tasks.get_all()
+        async with self.proxy_access_repositories as repositories:
+            res = await repositories.tasks.get_all()
             all_tasks = [TaskDTO.model_validate(task) for task in res]
 
         return all_tasks
-    
-    @staticmethod
+
     async def get_task_by_id(
+            self,
             task_id: UUID,
-            proxy_access_repositories: IProxyAccessRepositories,
     ) -> TaskDTO:
         """Запрос одной задачи по id из БД."""
-        async with proxy_access_repositories:
-            res = await proxy_access_repositories.tasks.get_by_params(id=task_id)
+        async with self.proxy_access_repositories as repositories:
+            res = await repositories.tasks.get_by_params(id=task_id)
             if not res:
                 raise ObjectNotFoundError(object_type='task', parameter='id')
             res = res[0]
             task = TaskDTO.model_validate(res)
 
         return task
-    
-    @staticmethod
+
     async def add_task(
-            task: TaskCreate,
-            proxy_access_repositories: IProxyAccessRepositories,
+            self,
+            new_task: TaskCreate,
     ) -> TaskDTO:
         """Добавление задачи в БД и сопутствующие действия."""
-        async with proxy_access_repositories:
-            task_dict = task.model_dump()
-            res = await proxy_access_repositories.tasks.add_one(data=task_dict)
+        async with self.proxy_access_repositories as repositories:
+            task_dict = new_task.model_dump()
+            res = await repositories.tasks.add_one(data=task_dict)
             task = TaskDTO.model_validate(res)
-            await proxy_access_repositories.commit()
+            await repositories.commit()
 
         return task
 
-    @staticmethod
     async def delete_task_by_id(
+            self,
             task_id: UUID,
-            proxy_access_repositories: IProxyAccessRepositories,
     ) -> None:
         """Удаление одной задачи по id из БД и сопутствующие действия."""
-        async with proxy_access_repositories:
-            res = await proxy_access_repositories.tasks.get_by_params(id=task_id)
+        async with self.proxy_access_repositories as repositories:
+            res = await repositories.tasks.get_by_params(id=task_id)
             if not res:
                 raise ObjectNotFoundError(object_type='task', parameter='id')
             entity = res[0]
-            await proxy_access_repositories.tasks.delete_one_entity(entity=entity)
-            await proxy_access_repositories.commit()
+            await repositories.tasks.delete_one_entity(entity=entity)
+            await repositories.commit()
 
-    @staticmethod
     async def update_task_by_id(
+            self,
             task_id: UUID,
             task_changing: TaskUpdate | TaskUpdatePartial,
-            proxy_access_repositories: IProxyAccessRepositories,
     ) -> TaskDTO:
         """Частичное или полное изменение одной задачи по id из БД и сопутствующие действия."""
-        async with proxy_access_repositories:
-            res = await proxy_access_repositories.tasks.get_by_params(id=task_id)
+        async with self.proxy_access_repositories as repositories:
+            res = await repositories.tasks.get_by_params(id=task_id)
             if not res:
                 raise ObjectNotFoundError(object_type='task', parameter='id')
             entity = res[0]
             task_dict = task_changing.model_dump(exclude_unset=True, exclude_none=True)
-            res = await proxy_access_repositories.tasks.update_one_entity(entity=entity, data=task_dict)
+            res = await repositories.tasks.update_one_entity(entity=entity, data=task_dict)
             task = TaskDTO.model_validate(res)
-            await proxy_access_repositories.commit()
+            await repositories.commit()
 
         return task

@@ -1,5 +1,5 @@
 """
-    Содержит все основные зависимости, используемые в приложении
+    Содержит все основные зависимости, используемые в приложении.
 """
 from typing import Callable
 
@@ -10,7 +10,9 @@ from sqlalchemy.ext.asyncio import async_sessionmaker
 from src.core.schemas import UserDTO
 from src.auth.security import oauth2_scheme, verify_jwt_token
 from src.database import db_helper
-from src.layers.utils import ProxyAccessRepositories, IProxyAccessRepositories
+from src.layers.utils.proxy_access_repositories import ProxyAccessRepositories, IProxyAccessRepositories
+from src.layers.utils.background_tasker import IBackgroundTasker, BackgroundTasker
+from src.project import settings
 from src.project.exceptions import AccessPermissionError, TokenError
 
 
@@ -27,6 +29,11 @@ def get_proxy_access_repositories(
     :return: Экземпляр ProxyAccessRepositories, реализующий интерфейс IProxyAccessRepositories.
     """
     return ProxyAccessRepositories(session_factory=session_factory)
+
+
+def get_background_tasker() -> IBackgroundTasker:
+    """Возвращает актуальный экземпляр BackgroundTasker для осуществления задач в фоне."""
+    return BackgroundTasker(email_stmp_user=settings.EMAIL_SMTP_USER)
 
 
 async def get_current_user(
