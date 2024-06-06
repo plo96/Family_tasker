@@ -7,6 +7,6 @@ __all__ = (
     "UserRepository",
 )
 
-from .tasks import TaskRepository
-from .users import UserRepository
+from .tasks_repository import TaskRepository
+from .users_repository import UserRepository
 from .i_repository import IRepository
