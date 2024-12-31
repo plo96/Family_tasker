@@ -2,24 +2,22 @@
     Роутер для взаимодействия с сущностью пользователей (для пользователей).
 """
 
-from fastapi import APIRouter, status, Depends
+from fastapi import APIRouter, status
 from fastapi.responses import JSONResponse
 
-from src.core.dependencies import get_current_user_having_role
 from src.project.exceptions import endpoint_exceptions_processing
 from src.core.schemas import UserCreate, UserDTO, UserCheck
 from src.layers.services import users_service
 
 router = APIRouter(
-    tags=["Users", "AllUsers"],
-    dependencies=[Depends(get_current_user_having_role('user')), ],
+    tags=["Users AllUsers"],
 )
 
 
 @router.post("/token")
 @endpoint_exceptions_processing
 async def token(
-        user_check: UserCheck,
+    user_check: UserCheck,
 ) -> JSONResponse:
     """
     Эндпоинт для получения токена по имени и паролю.
@@ -32,17 +30,19 @@ async def token(
     token = await users_service.get_token(
         user_check=user_check,
     )
-    return JSONResponse(status_code=status.HTTP_200_OK,
-                        content={"access_token": token, "token_type": "bearer"})
+    return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content={"access_token": token, "token_type": "bearer"},
+    )
 
 
-@router.post("/", response_model=UserDTO)
+@router.post("/add", response_model=UserDTO)
 @endpoint_exceptions_processing
 async def add_user(
-        new_user: UserCreate,
+    new_user: UserCreate,
 ) -> UserDTO:
     """
-    Эндпоинт для добавления одного пользователя.
+    Эндпоинт для регистрации одного пользователя.
     :param new_user: Данные для создания нового пользователя в виде экземпляра UserCreate.
     :return: Экземпляр UserDTO, соответствующий новой созданному пользователю.
     """

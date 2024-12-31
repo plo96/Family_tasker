@@ -1,25 +1,41 @@
 """
     Роутер для взаимодействия с сущностью пользователей (для админов).
 """
+
 from uuid import UUID
 
 from fastapi import APIRouter, status, Depends
 from fastapi.responses import JSONResponse
 
-from src.project.exceptions import endpoint_exceptions_processing
-from src.core.schemas import UserDTO, UserUpdatePartial
 from src.core.dependencies import get_current_user_having_role
+from src.project.exceptions import endpoint_exceptions_processing
+from src.core.schemas import UserDTO, UserUpdatePartial, UserCreate
 from src.layers.services import users_service
 
 router = APIRouter(
-    tags=["Users", "Admin"],
+    tags=["Users Admin"],
 )
+
+
+@router.post("/add_adm/", response_model=UserDTO)
+@endpoint_exceptions_processing
+async def add_admin_user(
+    new_user: UserCreate,
+) -> UserDTO:
+    """
+    Эндпоинт для добавления одного пользователя-админа.
+    :param new_user: Данные для создания нового пользователя в виде экземпляра UserCreate.
+    :return: Экземпляр UserDTO, соответствующий новой созданному пользователю.
+    """
+    return await users_service.add_admin_user(
+        new_user=new_user,
+    )
 
 
 @router.get("/", response_model=list[UserDTO])
 @endpoint_exceptions_processing
 async def get_users(
-        current_user: UserDTO = Depends(get_current_user_having_role('admin')),
+    current_user: UserDTO = Depends(get_current_user_having_role("admin")),
 ) -> list[UserDTO]:
     """Эндпоинт для запроса списка всех пользователей."""
     return await users_service.get_users()
@@ -28,8 +44,8 @@ async def get_users(
 @router.get("/{user_id}", response_model=UserDTO)
 @endpoint_exceptions_processing
 async def get_user_by_id(
-        user_id: UUID,
-        current_user: UserDTO = Depends(get_current_user_having_role('admin')),
+    user_id: UUID,
+    current_user: UserDTO = Depends(get_current_user_having_role("admin")),
 ) -> UserDTO:
     """
     Эндпоинт для запроса одного пользователя по id.
@@ -45,8 +61,8 @@ async def get_user_by_id(
 @router.delete("/{user_id}")
 @endpoint_exceptions_processing
 async def delete_user_by_id(
-        user_id: UUID,
-        current_user: UserDTO = Depends(get_current_user_having_role('admin')),
+    user_id: UUID,
+    current_user: UserDTO = Depends(get_current_user_having_role("admin")),
 ) -> JSONResponse:
     """
     Эндпоинт для удаления одного пользователя по id.
@@ -57,16 +73,18 @@ async def delete_user_by_id(
     await users_service.delete_user_by_id(
         user_id=user_id,
     )
-    return JSONResponse(status_code=status.HTTP_200_OK,
-                        content={'detail': f'User with id={user_id} is successfully deleted'})
+    return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content={"detail": f"User with id={user_id} is successfully deleted"},
+    )
 
 
 @router.patch("/{user_id}", response_model=UserDTO)
 @endpoint_exceptions_processing
 async def patch_user_by_id(
-        user_id: UUID,
-        user_changing: UserUpdatePartial,
-        current_user: UserDTO = Depends(get_current_user_having_role('admin')),
+    user_id: UUID,
+    user_changing: UserUpdatePartial,
+    current_user: UserDTO = Depends(get_current_user_having_role("admin")),
 ) -> UserDTO:
     """
     Эндпоинт для частичного изменения данных одного пользователя по id.

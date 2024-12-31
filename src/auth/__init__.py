@@ -1,5 +1,3 @@
-__all__ = (
-	"security",
-)
+__all__ = ("security",)
 
 from . import security

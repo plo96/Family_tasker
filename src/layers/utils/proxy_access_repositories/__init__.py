@@ -1,9 +1,10 @@
 """
     Интерфейс и реализация класса для реализации единой точки доступа к репозиториям.
 """
+
 __all__ = (
-	"IProxyAccessRepositories",
-	"ProxyAccessRepositories",
+    "IProxyAccessRepositories",
+    "ProxyAccessRepositories",
 )
 
 from .i_proxy_access_repositories import IProxyAccessRepositories

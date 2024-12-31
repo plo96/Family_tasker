@@ -1,6 +1,7 @@
 """
     Роутер для взаимодействия с сущностю задач (для пользователей).
 """
+
 from uuid import UUID
 from fastapi import APIRouter, Depends
 
@@ -11,15 +12,15 @@ from src.layers.services import tasks_service
 
 
 router = APIRouter(
-	tags=["Tasks", "AllUsers"],
-	dependencies=[Depends(get_current_user_having_role('user')), ],
+    tags=["Tasks AllUsers"],
+    # dependencies=[Depends(get_current_user_having_role('user')), ],
 )
 
 
 @router.get("/{task_id}", response_model=TaskDTO)
 @endpoint_exceptions_processing
 async def get_task_by_id(
-        task_id: UUID,
+    task_id: UUID,
 ) -> TaskDTO:
     """
     Эндпоинт для запроса одной задачи по id.
@@ -33,21 +34,21 @@ async def get_task_by_id(
 @router.post("/", response_model=TaskDTO)
 @endpoint_exceptions_processing
 async def add_task(
-        new_task: TaskCreate,
+    new_task: TaskCreate,
 ) -> TaskDTO:
     """
     Эндпоинт для добавления одной задачи."
     :param new_task: Данные для создания новой задачи в виде экземпляра TaskCreate.
     :return: Экземпляр TaskDTO, соответствующий новой созданной задаче.
-    """""
+    """ ""
     return await tasks_service.add_task(new_task=new_task)
 
 
 @router.put("/{task_id}", response_model=TaskDTO)
 @endpoint_exceptions_processing
 async def put_task_by_id(
-        task_id: UUID,
-        task_changing: TaskUpdate,
+    task_id: UUID,
+    task_changing: TaskUpdate,
 ) -> TaskDTO:
     """
     Эндпоинт для полного изменения одной задачи по id.
@@ -57,16 +58,16 @@ async def put_task_by_id(
              ObjectNotFoundError в случае отсутствия задачи с таким id в БД.
     """
     return await tasks_service.update_task_by_id(
-		task_id=task_id,
-		task_changing=task_changing,
-	)
+        task_id=task_id,
+        task_changing=task_changing,
+    )
 
 
 @router.patch("/{task_id}", response_model=TaskDTO)
 @endpoint_exceptions_processing
 async def patch_task_by_id(
-        task_id: UUID,
-        task_changing: TaskUpdatePartial,
+    task_id: UUID,
+    task_changing: TaskUpdatePartial,
 ) -> TaskDTO:
     """
     Эндпоинт для частичного изменения одной задачи по id.

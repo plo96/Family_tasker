@@ -13,11 +13,12 @@ from src.layers.routers import router
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):    # noqa
+async def lifespan(app: FastAPI):  # noqa
     """'Обертка' для реализации событий до и после запуска приложения"""
-    print('Server starts')
+    print("Server starts")
     yield
-    print('Server stops')
+    print("Server stops")
+
 
 app = FastAPI(
     title="FamilyTasker",
@@ -28,11 +29,12 @@ app = FastAPI(
 
 app.include_router(router)
 
-@app.get('/')
+
+@app.get("/")
 def say_hello():
     """Тестовое сообщение для проверки работоспособности приложения"""
-    return 'Hello!'
+    return "Hello!"
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     uvicorn.run(app, reload=False)

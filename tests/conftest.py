@@ -1,6 +1,7 @@
 """
     Настройки для прогона тестов - общие
 """
+
 from typing import AsyncGenerator
 
 import pytest
@@ -16,13 +17,14 @@ from src.main import app
 
 NUM_TESTS = 5
 
-fake_engine = create_async_engine(url=settings.TEST_DATABASE_URL_async_sqlite,
-                                  poolclass=NullPool,
-                                  echo=settings.TEST_ECHO)
-fake_session_factory = async_sessionmaker(bind=fake_engine,
-                                          autoflush=False,
-                                          autocommit=False,
-                                          expire_on_commit=False)
+fake_engine = create_async_engine(
+    url=settings.TEST_DATABASE_URL_ASYNC_SQLITE,
+    poolclass=NullPool,
+    echo=settings.TEST_ECHO,
+)
+fake_session_factory = async_sessionmaker(
+    bind=fake_engine, autoflush=False, autocommit=False, expire_on_commit=False
+)
 metadata = BaseModel.metadata
 metadata.bind = fake_engine
 
@@ -34,7 +36,7 @@ def get_fake_session_factory():
 app.dependency_overrides[get_actual_session_factory] = get_fake_session_factory
 
 
-@pytest.fixture(autouse=True, scope='session')
+@pytest.fixture(autouse=True, scope="session")
 async def prepare_database():
     async with fake_engine.begin() as conn:
         await conn.run_sync(metadata.create_all)
@@ -43,14 +45,16 @@ async def prepare_database():
         await conn.run_sync(metadata.drop_all)
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def client() -> TestClient:
     return TestClient(app)
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 async def async_client() -> AsyncGenerator[AsyncClient, None]:
-    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as async_client:
+    async with AsyncClient(
+        transport=ASGITransport(app=app), base_url="http://test"
+    ) as async_client:
         yield async_client
 
 

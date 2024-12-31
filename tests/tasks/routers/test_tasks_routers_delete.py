@@ -9,11 +9,12 @@ from tests.conftest import get_fake_session_factory
 
 
 @pytest.mark.usefixtures("some_data_added")
-async def test_delete_task_by_id(task_url: str, async_client: AsyncClient, all_tasks_ids: list):
+async def test_delete_task_by_id(
+    task_url: str, async_client: AsyncClient, all_tasks_ids: list
+):
     current_task_number = len(all_tasks_ids)
     for task_id in all_tasks_ids:
-        print(task_url + f'{str(task_id)}')
-        result = await async_client.delete(url=task_url + f'{str(task_id)}')
+        result = await async_client.delete(url=task_url + f"{str(task_id)}")
         assert result.status_code == status.HTTP_200_OK
         current_task_number -= 1
         session_factory = get_fake_session_factory()

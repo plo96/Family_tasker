@@ -1,6 +1,7 @@
 """
     Базовый интерфейс для работы с репозиториями
 """
+
 from abc import ABC, abstractmethod
 
 

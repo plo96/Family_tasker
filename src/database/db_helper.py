@@ -2,6 +2,7 @@
     Вспомогательный класс DatabaseHelper для установления соединения с базой данных
     и выдачи сессии (на основе SQLAlchemy)
 """
+
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 
 from src.project.config import settings
@@ -9,6 +10,7 @@ from src.project.config import settings
 
 class DatabaseHelper:
     """Класс, обеспечивающий подключение к базе данных с определёнными настройками"""
+
     def __init__(self, url: str, echo: str):
         self._engine = create_async_engine(
             url=url,
@@ -29,5 +31,6 @@ class DatabaseHelper:
         return self._session_factory
 
 
-db_helper = DatabaseHelper(url=settings.DATABASE_URL_async_sqlite,
-                           echo=settings.ECHO)  # type: ignore
+db_helper = DatabaseHelper(
+    url=settings.DATABASE_URL_ASYNC_SQLITE, echo=settings.ECHO
+)  # type: ignore

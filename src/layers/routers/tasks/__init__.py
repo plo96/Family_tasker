@@ -1,9 +1,8 @@
 """
     Роутеры для сущности задач.
 """
-__all__ = (
-    "router",
-)
+
+__all__ = ("router",)
 
 from fastapi import APIRouter
 
@@ -11,8 +10,10 @@ from .admin_tasks_router import router as admin_tasks_router
 from .tasks_router import router as tasks_router
 
 router = APIRouter(
-	prefix="/tasks",
-	tags=["Tasks", ],
+    prefix="/tasks",
+    tags=[
+        "Tasks",
+    ],
 )
 
 router.include_router(admin_tasks_router)

@@ -1,6 +1,7 @@
 """
     Сервис для осуществления бизнес-логики работы с сущностью задач.
 """
+
 from uuid import UUID
 
 from src.layers.utils.proxy_access_repositories import IProxyAccessRepositories
@@ -12,8 +13,8 @@ class TaskService:
     proxy_access_repositories: IProxyAccessRepositories
 
     def __init__(
-            self,
-            proxy_access_repositories: IProxyAccessRepositories,
+        self,
+        proxy_access_repositories: IProxyAccessRepositories,
     ):
         self.proxy_access_repositories = proxy_access_repositories
 
@@ -28,22 +29,22 @@ class TaskService:
         return all_tasks
 
     async def get_task_by_id(
-            self,
-            task_id: UUID,
+        self,
+        task_id: UUID,
     ) -> TaskDTO:
         """Запрос одной задачи по id из БД."""
         async with self.proxy_access_repositories as repositories:
             res = await repositories.tasks.get_by_params(id=task_id)
             if not res:
-                raise ObjectNotFoundError(object_type='task', parameter='id')
+                raise ObjectNotFoundError(object_type="task", parameter="id")
             res = res[0]
             task = TaskDTO.model_validate(res)
 
         return task
 
     async def add_task(
-            self,
-            new_task: TaskCreate,
+        self,
+        new_task: TaskCreate,
     ) -> TaskDTO:
         """Добавление задачи в БД и сопутствующие действия."""
         async with self.proxy_access_repositories as repositories:
@@ -55,31 +56,33 @@ class TaskService:
         return task
 
     async def delete_task_by_id(
-            self,
-            task_id: UUID,
+        self,
+        task_id: UUID,
     ) -> None:
         """Удаление одной задачи по id из БД и сопутствующие действия."""
         async with self.proxy_access_repositories as repositories:
             res = await repositories.tasks.get_by_params(id=task_id)
             if not res:
-                raise ObjectNotFoundError(object_type='task', parameter='id')
+                raise ObjectNotFoundError(object_type="task", parameter="id")
             entity = res[0]
             await repositories.tasks.delete_one_entity(entity=entity)
             await repositories.commit()
 
     async def update_task_by_id(
-            self,
-            task_id: UUID,
-            task_changing: TaskUpdate | TaskUpdatePartial,
+        self,
+        task_id: UUID,
+        task_changing: TaskUpdate | TaskUpdatePartial,
     ) -> TaskDTO:
         """Частичное или полное изменение одной задачи по id из БД и сопутствующие действия."""
         async with self.proxy_access_repositories as repositories:
             res = await repositories.tasks.get_by_params(id=task_id)
             if not res:
-                raise ObjectNotFoundError(object_type='task', parameter='id')
+                raise ObjectNotFoundError(object_type="task", parameter="id")
             entity = res[0]
             task_dict = task_changing.model_dump(exclude_unset=True, exclude_none=True)
-            res = await repositories.tasks.update_one_entity(entity=entity, data=task_dict)
+            res = await repositories.tasks.update_one_entity(
+                entity=entity, data=task_dict
+            )
             task = TaskDTO.model_validate(res)
             await repositories.commit()
 

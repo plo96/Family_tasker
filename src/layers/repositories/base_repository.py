@@ -1,6 +1,7 @@
 """
     Реализация конкретного репозитория на базе SQLAlchemy
 """
+
 from sqlalchemy.ext.asyncio import AsyncSession, async_scoped_session
 from sqlalchemy import select
 
@@ -10,7 +11,8 @@ from src.core.models import BaseModel
 
 class BaseRepository(IRepository):
     """SQLAlchemy-класс для работы с репозиторием для конкретной модели ORM"""
-    model: type(BaseModel) = None
+
+    model: type[BaseModel] = None
 
     def __init__(self, session: AsyncSession | async_scoped_session):
         self.session = session

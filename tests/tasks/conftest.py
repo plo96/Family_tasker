@@ -5,8 +5,13 @@ import pytest
 from faker import Faker
 from sqlalchemy import select, insert
 
-from src.core.schemas import TaskCreate, MAX_TASK_NAME_LENGTH, MAX_TASK_DESCRIPTION_LENGTH, MIN_TASK_PRICE, \
-    MAX_TASK_PRICE
+from src.core.schemas import (
+    TaskCreate,
+    MAX_TASK_NAME_LENGTH,
+    MAX_TASK_DESCRIPTION_LENGTH,
+    MIN_TASK_PRICE,
+    MAX_TASK_PRICE,
+)
 from src.core.models import Task
 
 from tests.conftest import get_fake_session_factory, NUM_TESTS
@@ -14,18 +19,23 @@ from tests.conftest import get_fake_session_factory, NUM_TESTS
 fake = Faker()
 
 
-def get_new_task_dict(name: str = None,
-                      description: str = None,
-                      price: int = None) -> dict:
-    if not name: name = fake.text(MAX_TASK_NAME_LENGTH)
-    if not description: description = fake.text(MAX_TASK_DESCRIPTION_LENGTH)
-    if not price: price = randint(MIN_TASK_PRICE, MAX_TASK_PRICE)
+def get_new_task_dict(
+    name: str = None,
+    description: str = None,
+    price: int = None,
+) -> dict:
+    if not name:
+        name = fake.text(MAX_TASK_NAME_LENGTH)
+    if not description:
+        description = fake.text(MAX_TASK_DESCRIPTION_LENGTH)
+    if not price:
+        price = randint(MIN_TASK_PRICE, MAX_TASK_PRICE)
     return dict(name=name, description=description, price=price)
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def task_url() -> str:
-    return '/tasks/'
+    return "/tasks/"
 
 
 @pytest.fixture
@@ -50,12 +60,14 @@ def new_task_bad_price_max(request) -> dict:
 
 @pytest.fixture(params=[_ for _ in range(NUM_TESTS)])
 def new_task_bad_name() -> dict:
-    return get_new_task_dict(name=f'{fake.text(MAX_TASK_NAME_LENGTH * 4)}')
+    return get_new_task_dict(name=f"{fake.text(MAX_TASK_NAME_LENGTH * 4)}")
 
 
 @pytest.fixture(params=[_ for _ in range(NUM_TESTS)])
 def new_task_bad_description() -> dict:
-    return get_new_task_dict(description=f'{fake.text(MAX_TASK_DESCRIPTION_LENGTH * 2)}')
+    return get_new_task_dict(
+        description=f"{fake.text(MAX_TASK_DESCRIPTION_LENGTH * 2)}"
+    )
 
 
 @pytest.fixture

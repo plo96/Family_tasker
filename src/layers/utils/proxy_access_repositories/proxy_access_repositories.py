@@ -2,6 +2,7 @@
     Конкретная реализация класса для работы со всеми репозиториями в рамках одной сессии
     через асинхронный контекстный менеджер.
 """
+
 from sqlalchemy.ext.asyncio import async_sessionmaker, async_scoped_session
 
 from src.layers.repositories import TaskRepository, UserRepository
@@ -24,6 +25,7 @@ class ProxyAccessRepositories(IProxyAccessRepositories):
         self._session = self._session_factory()
         self.tasks = TaskRepository(self._session)
         self.users = UserRepository(self._session)
+        return self
 
     async def __aexit__(self, *args):
         """

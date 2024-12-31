@@ -1,10 +1,11 @@
 """
 	Модели ОРМ для различных сущностей в БД
 """
+
 __all__ = (
-	"BaseModel",
-	"Task",
-	"User",
+    "BaseModel",
+    "Task",
+    "User",
 )
 
 from .base_model import BaseModel
