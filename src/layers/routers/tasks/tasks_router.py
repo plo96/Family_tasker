@@ -13,7 +13,9 @@ from src.layers.services import tasks_service
 
 router = APIRouter(
     tags=["Tasks AllUsers"],
-    # dependencies=[Depends(get_current_user_having_role('user')), ],
+    dependencies=[
+        Depends(get_current_user_having_role("user")),
+    ],
 )
 
 

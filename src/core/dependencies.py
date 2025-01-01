@@ -42,16 +42,16 @@ def get_background_tasker() -> IBackgroundTasker:
 
 async def get_current_user(
     token: str = Depends(oauth2_scheme),
-    proxy_access_repositories: IProxyAccessRepositories = Depends(
-        get_proxy_access_repositories
-    ),
 ) -> UserDTO:
     """
     Получение текущего пользователя по токену, содержащемуся в request.headers.get("Authorization").
     :param token: JWT-токен, получается из заголовков в DI.
-    :param proxy_access_repositories: Единая точка доступа ко всем репозиториям, получается в DI.
     :return: Экземпляр UserDTO, соответствующий текущему пользователю.
     """
+    proxy_access_repositories: IProxyAccessRepositories = (
+        get_proxy_access_repositories()
+    )
+
     decoded_data = verify_jwt_token(token)
     if not decoded_data:
         raise TokenError(detail="Invalid token.")

@@ -32,7 +32,7 @@ class Grade(Enum):
 class User(BaseModel):
     """ОРМ-модель с декларативным объявлением с помощью SQLAlchemy для пользователей."""
 
-    name: Mapped[str]
+    username: Mapped[str]
     hashed_password: Mapped[str]
     email: Mapped[str]
     role: Mapped[Roles]

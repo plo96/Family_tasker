@@ -29,6 +29,7 @@ pyjwt = "^2.9.0"
 passlib = "^1.7.4"
 celery = "^5.4.0"
 bcrypt = "^4.2.1"
+cryptography = "^44.0.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.1"

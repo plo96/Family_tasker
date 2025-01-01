@@ -4,8 +4,10 @@
 
 from uuid import UUID
 
+from fastapi.security import OAuth2PasswordRequestForm
+
 from src.auth.security import pwd_context, create_jwt_token
-from src.core.models.users import Roles
+from src.core.models.users import Roles, User
 from src.layers.utils.proxy_access_repositories import IProxyAccessRepositories
 from src.layers.utils.background_tasker import IBackgroundTasker
 from src.project.exceptions import (
@@ -14,7 +16,7 @@ from src.project.exceptions import (
     UserNotAllowedError,
     UserNotExistError,
 )
-from src.core.schemas import UserCreate, UserDTO, UserUpdatePartial, UserCheck
+from src.core.schemas import UserCreate, UserDTO, UserUpdatePartial
 
 
 class UsersService:
@@ -29,19 +31,21 @@ class UsersService:
 
     async def get_token(
         self,
-        user_check: UserCheck,
+        user_check: OAuth2PasswordRequestForm,
     ) -> str:
         """
                 Проверка данных пользователя и выдача токена в случае прохождения аутентификации.
-        :param user_check: Экземпляр UserCheck, содержащий имя и пароль пользователя.
+        :param user_check: Экземпляр OAuth2PasswordRequestForm, содержащий имя и пароль пользователя.
                 :return: Токен для авторизации данного пользователя.
         """
         async with self._proxy_access_repositories as repositories:
-            res = await repositories.users.get_by_params(name=user_check.name)
+            res: list[User] = await repositories.users.get_by_params(
+                username=user_check.username
+            )
             if not res:
                 raise UserNotExistError
-            res = res[0]
-        user = UserDTO.model_validate(res)
+            user_model = res[0]
+            user = UserDTO.model_validate(user_model, from_attributes=True)
 
         if user.is_deleted or not user.is_verified:
             raise UserNotAllowedError
@@ -63,7 +67,7 @@ class UsersService:
             res = await repositories.users.get_all()
             all_users = [UserDTO.model_validate(user) for user in res]
             all_active_users = list(
-                filter(lambda user: getattr(user, "is_deleted"), all_users)
+                filter(lambda user: not getattr(user, "is_deleted"), all_users)
             )
         return all_active_users
 

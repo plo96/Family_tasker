@@ -8,7 +8,6 @@ __all__ = (
     "MAX_TASK_NAME_LENGTH",
     "MAX_TASK_DESCRIPTION_LENGTH",
     "UserCreate",
-    "UserCheck",
     "UserDTO",
     "UserUpdatePartial",
     "MIN_USER_NAME_LENGTH",
@@ -28,7 +27,6 @@ from .tasks import (
 from .users import (
     UserCreate,
     UserDTO,
-    UserCheck,
     UserUpdatePartial,
     MAX_USER_NAME_LENGTH,
     MIN_USER_NAME_LENGTH,

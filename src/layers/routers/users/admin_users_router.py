@@ -38,6 +38,7 @@ async def get_users(
     current_user: UserDTO = Depends(get_current_user_having_role("admin")),
 ) -> list[UserDTO]:
     """Эндпоинт для запроса списка всех пользователей."""
+    print(f"{current_user=}")
     return await users_service.get_users()
 
 

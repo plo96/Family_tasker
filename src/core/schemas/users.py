@@ -16,7 +16,9 @@ MIN_PASSWORD_LENGTH: int = 8
 class UserBase(BaseModel):
     """Базовая схема для сущности пользователя."""
 
-    name: str = Field(max_length=MAX_USER_NAME_LENGTH, min_length=MIN_USER_NAME_LENGTH)
+    username: str = Field(
+        max_length=MAX_USER_NAME_LENGTH, min_length=MIN_USER_NAME_LENGTH
+    )
 
 
 class UserCreate(UserBase):
@@ -29,18 +31,12 @@ class UserCreate(UserBase):
 class UserUpdatePartial(UserBase):
     """Схема для частичного изменения пользователя."""
 
-    name: str = Field(
+    username: str = Field(
         max_length=MAX_USER_NAME_LENGTH, min_length=MIN_USER_NAME_LENGTH, default=None
     )
     password: str = Field(min_length=MIN_PASSWORD_LENGTH, default=None)
     email: str = Field(default=None)
     role: str = Field(default=None)
-
-
-class UserCheck(UserBase):
-    """Схема для аутентификации пользователя."""
-
-    password: str = Field(min_length=MIN_PASSWORD_LENGTH)
 
 
 class UserDTO(UserBase):

@@ -18,15 +18,15 @@ def endpoint_exceptions_processing(func):
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"{_ex.object_type} with this {_ex.parameter} is not found in database.",
             )
-        except PasswordIsNotCorrect:
+        except (UserNotExistError, PasswordIsNotCorrect):
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST_NOT_FOUND,
-                detail="Uncorrected password.",
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Uncorrect user name or password.",
             )
-        except (UserNotExistError, UserNotAllowedError):
+        except UserNotAllowedError:
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST_NOT_FOUND,
-                detail="Uncorrected user name.",
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="User is not verified.",
             )
         except Exception as _ex:
             print(_ex)
