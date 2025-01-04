@@ -34,3 +34,7 @@ class DatabaseHelper:
 db_helper = DatabaseHelper(
     url=settings.DATABASE_URL_ASYNC_SQLITE, echo=settings.ECHO
 )  # type: ignore
+
+
+def get_actual_session_factory() -> async_sessionmaker:
+    return db_helper.get_session_factory()

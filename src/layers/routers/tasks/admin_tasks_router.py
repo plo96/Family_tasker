@@ -8,7 +8,7 @@ from fastapi.responses import JSONResponse
 
 from src.project.exceptions import endpoint_exceptions_processing
 from src.core.schemas import TaskDTO, UserDTO
-from src.core.dependencies import get_current_user_having_role
+from src.auth.auth import get_current_user_having_role
 from src.layers.services import tasks_service
 
 

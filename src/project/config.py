@@ -37,7 +37,7 @@ class Settings(BaseSettings):
     @property
     def REDIS_URL(self):
         """URL для подключения к redis"""
-        return f"redis://{self.REDIS_PWD}@{self.REDIS_HOST}:{self.REDIS_PORT}/0"
+        return f"redis://:{self.REDIS_PWD}@{self.REDIS_HOST}:{self.REDIS_PORT}/0"
 
     # @property
     # def DATABASE_URL_asyncpg(self):

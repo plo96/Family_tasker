@@ -1,43 +1,15 @@
-"""
-    Содержит все основные зависимости, используемые в приложении.
-"""
-
 from typing import Callable
-
 from uuid import UUID
+
 from fastapi import Depends
-from sqlalchemy.ext.asyncio import async_sessionmaker
 
-from src.core.schemas import UserDTO
-from src.auth.security import oauth2_scheme, verify_jwt_token
-from src.database import db_helper
-from src.layers.utils.proxy_access_repositories import (
-    ProxyAccessRepositories,
-    IProxyAccessRepositories,
+from src.auth.jwt import oauth2_scheme, verify_jwt_token
+from src.layers.utils.proxy_access_repositories.proxy_access_repositories import (
+    get_proxy_access_repositories,
 )
-from src.layers.utils.background_tasker import IBackgroundTasker, BackgroundTasker
-from src.project import settings
-from src.project.exceptions import AccessPermissionError, TokenError
-
-
-def get_actual_session_factory() -> async_sessionmaker:
-    return db_helper.get_session_factory()
-
-
-def get_proxy_access_repositories(
-    session_factory: async_sessionmaker = get_actual_session_factory(),
-) -> IProxyAccessRepositories:
-    """
-    Возвращает актуальный экземпляр ProxyAccessRepositories для единого доступа ко всем репозиториям сущностей.
-    :param session_factory: Фабрика сессий для доступа к БД.
-    :return: Экземпляр ProxyAccessRepositories, реализующий интерфейс IProxyAccessRepositories.
-    """
-    return ProxyAccessRepositories(session_factory=session_factory)
-
-
-def get_background_tasker() -> IBackgroundTasker:
-    """Возвращает актуальный экземпляр BackgroundTasker для осуществления задач в фоне."""
-    return BackgroundTasker(email_stmp_user=settings.EMAIL_SMTP_USER)
+from src.core.schemas import UserDTO
+from src.layers.utils.proxy_access_repositories import IProxyAccessRepositories
+from src.project.exceptions import TokenError, AccessPermissionError
 
 
 async def get_current_user(

@@ -29,7 +29,7 @@ def endpoint_exceptions_processing(func):
                 detail="User is not verified.",
             )
         except Exception as _ex:
-            print(_ex)
+            raise _ex
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Unknown internal server error.",

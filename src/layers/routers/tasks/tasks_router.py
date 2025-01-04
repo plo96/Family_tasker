@@ -5,7 +5,7 @@
 from uuid import UUID
 from fastapi import APIRouter, Depends
 
-from src.core.dependencies import get_current_user_having_role
+from src.auth.auth import get_current_user_having_role
 from src.project.exceptions import endpoint_exceptions_processing
 from src.core.schemas import TaskDTO, TaskCreate, TaskUpdate, TaskUpdatePartial
 from src.layers.services import tasks_service

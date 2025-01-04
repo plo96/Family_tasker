@@ -6,7 +6,7 @@ from uuid import UUID
 
 from fastapi.security import OAuth2PasswordRequestForm
 
-from src.auth.security import pwd_context, create_jwt_token
+from src.auth.jwt import pwd_context, create_jwt_token
 from src.core.models.users import Roles, User
 from src.layers.utils.proxy_access_repositories import IProxyAccessRepositories
 from src.layers.utils.background_tasker import IBackgroundTasker
@@ -34,9 +34,9 @@ class UsersService:
         user_check: OAuth2PasswordRequestForm,
     ) -> str:
         """
-                Проверка данных пользователя и выдача токена в случае прохождения аутентификации.
+        Проверка данных пользователя и выдача токена в случае прохождения аутентификации.
         :param user_check: Экземпляр OAuth2PasswordRequestForm, содержащий имя и пароль пользователя.
-                :return: Токен для авторизации данного пользователя.
+        :return: Токен для авторизации данного пользователя.
         """
         async with self._proxy_access_repositories as repositories:
             res: list[User] = await repositories.users.get_by_params(
@@ -99,7 +99,7 @@ class UsersService:
             new_user = UserDTO.model_validate(res)
             await repositories.commit()
 
-        # self._background_tasker.send_verify_email_message(user=new_user)
+        self._background_tasker.send_verify_email_message(user=new_user)
 
         return new_user
 

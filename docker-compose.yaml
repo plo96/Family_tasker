@@ -1,0 +1,37 @@
+services:
+  my_app:
+    container_name: my_app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - my_redis
+    volumes:
+      - ./logs:/app/logs
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./.env
+
+  my_redis:
+    container_name: my_redis
+    image: redis:latest
+    hostname: my_redis
+    command: ["redis-server", "--requirepass", "${REDIS_PWD}"]
+    volumes:
+      - ./redis_data:/data
+    ports:
+      - "1111:6379"
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: celery -A src.layers.utils.background_tasker.tasks.celery worker --loglevel=info --logfile=logs/celery.log
+    env_file:
+      - ./.env
+    depends_on:
+      - my_app
+      - my_redis
+    volumes:
+      - ./logs:/app/logs

@@ -9,7 +9,10 @@ __all__ = (
 
 from .users_service import UsersService
 from .tasks_service import TaskService
-from src.core.dependencies import get_proxy_access_repositories, get_background_tasker
+from ..utils.proxy_access_repositories.proxy_access_repositories import (
+    get_proxy_access_repositories,
+)
+from ..utils.background_tasker.background_tasker import get_background_tasker
 
 users_service = UsersService(
     proxy_access_repositories=get_proxy_access_repositories(),

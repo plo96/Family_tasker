@@ -5,8 +5,12 @@
 
 from sqlalchemy.ext.asyncio import async_sessionmaker, async_scoped_session
 
+from src.database.db_helper import get_actual_session_factory
 from src.layers.repositories import TaskRepository, UserRepository
-from .i_proxy_access_repositories import IProxyAccessRepositories
+from src.layers.utils.proxy_access_repositories import IProxyAccessRepositories
+from src.layers.utils.proxy_access_repositories.i_proxy_access_repositories import (
+    IProxyAccessRepositories,
+)
 
 
 class ProxyAccessRepositories(IProxyAccessRepositories):
@@ -45,3 +49,14 @@ class ProxyAccessRepositories(IProxyAccessRepositories):
         Откат текущих изменений в БД.
         """
         await self._session.rollback()
+
+
+def get_proxy_access_repositories(
+    session_factory: async_sessionmaker = get_actual_session_factory(),
+) -> IProxyAccessRepositories:
+    """
+    Возвращает актуальный экземпляр ProxyAccessRepositories для единого доступа ко всем репозиториям сущностей.
+    :param session_factory: Фабрика сессий для доступа к БД.
+    :return: Экземпляр ProxyAccessRepositories, реализующий интерфейс IProxyAccessRepositories.
+    """
+    return ProxyAccessRepositories(session_factory=session_factory)

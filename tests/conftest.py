@@ -10,7 +10,7 @@ from httpx import AsyncClient, ASGITransport
 from sqlalchemy import NullPool
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
-from src.core.dependencies import get_actual_session_factory
+from src.database.db_helper import get_actual_session_factory
 from src.project import settings
 from src.core.models import BaseModel
 from src.main import app
