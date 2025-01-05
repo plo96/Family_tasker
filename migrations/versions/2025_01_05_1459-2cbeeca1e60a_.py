@@ -1,19 +1,25 @@
-"""initial migration
+"""empty message
 
-Revision ID: 5e961f46c0e9
+Revision ID: 2cbeeca1e60a
 Revises: 
-Create Date: 2024-12-30 22:36:43.220301
+Create Date: 2025-01-05 14:59:08.082922
 
 """
 
+import datetime
 from typing import Sequence, Union
+from uuid import uuid4
 
 from alembic import op
 import sqlalchemy as sa
 
+from src.auth.jwt import pwd_context
+from src.core.models.default_values import get_current_time
+from src.core.models.users import Roles, Grade
+from src.project import settings
 
 # revision identifiers, used by Alembic.
-revision: str = "5e961f46c0e9"
+revision: str = "2cbeeca1e60a"
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -34,7 +40,7 @@ def upgrade() -> None:
         sa.Column("id", sa.Uuid(), nullable=False),
         sa.PrimaryKeyConstraint("id"),
     )
-    op.create_table(
+    table_users = op.create_table(
         "users",
         sa.Column("username", sa.String(), nullable=False),
         sa.Column("hashed_password", sa.String(), nullable=False),
@@ -52,6 +58,25 @@ def upgrade() -> None:
         sa.Column("is_verified", sa.Boolean(), nullable=False),
         sa.Column("id", sa.Uuid(), nullable=False),
         sa.PrimaryKeyConstraint("id"),
+    )
+
+    op.bulk_insert(
+        table_users,
+        [
+            {
+                "username": settings.MASTER_ADM_NAME,
+                "hashed_password": pwd_context.hash(settings.MASTER_ADM_PWD),
+                "email": settings.MASTER_ADM_EMAIL,
+                "role": "admin",
+                "grade": "Legend",
+                "count": 0,
+                "registered_at": get_current_time(),
+                "updated_at": None,
+                "is_deleted": False,
+                "is_verified": True,
+                "id": uuid4(),
+            }
+        ],
     )
     # ### end Alembic commands ###
 

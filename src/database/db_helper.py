@@ -32,7 +32,7 @@ class DatabaseHelper:
 
 
 db_helper = DatabaseHelper(
-    url=settings.DATABASE_URL_ASYNC_SQLITE, echo=settings.ECHO
+    url=settings.DATABASE_URL_asyncpg, echo=settings.ECHO
 )  # type: ignore
 
 

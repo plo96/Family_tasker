@@ -18,12 +18,19 @@ class Settings(BaseSettings):
     SQLITE_NAME: str
     TEST_SQLITE_NAME: str
 
-    REDIS_HOST: str
-    REDIS_PORT: int
-    REDIS_PWD: str
+    DB_NAME: str
+    DB_USER: str
+    DB_PWD: str
+
+    DB_HOST: str
+    DB_PORT: int
 
     ECHO: bool
     TEST_ECHO: bool
+
+    REDIS_HOST: str
+    REDIS_PORT: int
+    REDIS_PWD: str
 
     SECRET_KEY: str
     ALGORITHM: str
@@ -34,15 +41,20 @@ class Settings(BaseSettings):
     EMAIL_SMTP_USER: str
     EMAIL_SMTP_PWD: str
 
+    # main configs
+    MASTER_ADM_NAME: str
+    MASTER_ADM_PWD: str
+    MASTER_ADM_EMAIL: str
+
     @property
     def REDIS_URL(self):
         """URL для подключения к redis"""
         return f"redis://:{self.REDIS_PWD}@{self.REDIS_HOST}:{self.REDIS_PORT}/0"
 
-    # @property
-    # def DATABASE_URL_asyncpg(self):
-    #     """URL для подключения к БД (asyncpg)"""
-    #     return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+    @property
+    def DATABASE_URL_asyncpg(self):
+        """URL для подключения к БД (asyncpg)"""
+        return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PWD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
 
     @property
     def DATABASE_URL_ASYNC_SQLITE(self):

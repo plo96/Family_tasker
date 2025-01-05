@@ -15,7 +15,7 @@ RUN poetry install --no-root --no-interaction --no-ansi --only main
 
 EXPOSE 8000
 
+COPY migrations/. migrations/.
+COPY alembic.ini .
 COPY src/. src/.
 COPY .env .
-
-CMD gunicorn src.main:app --workers 2 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000

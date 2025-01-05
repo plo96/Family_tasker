@@ -9,7 +9,7 @@ from uuid import uuid4, UUID
 
 def get_current_time() -> datetime:
     """Функция для получения значения времени по умолчанию."""
-    return datetime.now(UTC)
+    return datetime.now(UTC).replace(tzinfo=None)
 
 
 def get_uuid() -> UUID:

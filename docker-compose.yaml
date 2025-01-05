@@ -1,28 +1,4 @@
 services:
-  my_app:
-    container_name: my_app
-    build:
-      context: .
-      dockerfile: Dockerfile
-    depends_on:
-      - my_redis
-    volumes:
-      - ./logs:/app/logs
-    ports:
-      - "8000:8000"
-    env_file:
-      - ./.env
-
-  my_redis:
-    container_name: my_redis
-    image: redis:latest
-    hostname: my_redis
-    command: ["redis-server", "--requirepass", "${REDIS_PWD}"]
-    volumes:
-      - ./redis_data:/data
-    ports:
-      - "1111:6379"
-
   worker:
     build:
       context: .
@@ -33,5 +9,55 @@ services:
     depends_on:
       - my_app
       - my_redis
+      - my_postgres
     volumes:
       - ./logs:/app/logs
+
+  my_redis:
+    container_name: my_redis
+    image: redis:latest
+    hostname: my_redis
+    command: ["redis-server", "--requirepass", "${REDIS_PWD}"]
+    volumes:
+      - ./redis_data:/data
+    env_file:
+      - ./.env
+
+  my_postgres:
+    container_name: my_postgres
+    image: postgres:latest
+    hostname: my_postgres
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PWD}
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}" ]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+    env_file:
+      - ./.env
+
+  my_app:
+    container_name: my_app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: bash -c "alembic upgrade head && gunicorn src.main:app --workers 2 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000"
+    depends_on:
+      my_redis:
+          condition: service_started
+      my_postgres:
+          condition: service_healthy
+    volumes:
+      - ./logs:/app/logs
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./.env

@@ -112,6 +112,7 @@ class UsersService:
         user_dict = new_user.model_dump()
         user_dict["hashed_password"] = user_dict.pop("password")
         user_dict["role"] = Roles.admin
+        user_dict["is_verified"] = True
 
         async with self._proxy_access_repositories as repositories:
             res = await repositories.users.add_one(data=user_dict)

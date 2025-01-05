@@ -11,3 +11,5 @@ tests/tasks/.pytest_cache/
 tests/.pytest_cache/
 .pytest_cache/
 logs/
+postgres_data/
+redis_data/
